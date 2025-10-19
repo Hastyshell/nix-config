@@ -1,0 +1,171 @@
+/* --- Global Styles --- */
+* {
+  font-family: 'SF Pro Text', 'Inter', 'Segoe UI, NotoSans Nerd Font', sans-serif;
+  font-size: 13px;
+  min-height: 0;
+  padding: 0;
+}
+
+/* --- Waybar Container --- */
+#waybar {
+  background: transparent;
+  color: #c6d0f5;
+  margin: 0;
+  font-weight: 500;
+}
+
+#custom-music {
+  background-color: #1a1b26;
+  padding: 0.3rem 0.7rem;
+  margin: 5px 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease-in-out;
+  min-width: 0;
+}
+
+#custom-music:hover {
+  background-color: rgb(41, 42, 53);
+}
+
+#custom-nixos {
+  color: #7ac5ff;
+  background-color: #1a1b26;
+  padding: 0.3rem 0.9rem 0.3rem 0.6rem;
+  margin: 5px 0px;
+  margin-left: 8px;
+  margin-right: 30px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s ease-in-out;
+  min-width: 0;
+}
+
+#custom-nixos:hover {
+  background-color: rgb(41, 42, 53);
+}
+
+#workspaces {
+  background-color: #1a1b26;
+  padding: 2px;
+  margin: 5px 30px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+#workspaces button {
+  color: #babbf1;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem 0.3rem 0.4rem;
+  background: transparent;
+  transition: all 0.2s ease-in-out;
+  border: none;
+}
+
+#workspaces button.active {
+  color: #bb9af7;
+  background-color: rgba(187, 154, 247, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(187, 154, 247, 0.25);
+}
+
+#workspaces button:hover {
+  background: rgb(41, 42, 53);
+  color: #c6d0f5;
+}
+
+#cpu,
+#memory,
+#temperature,
+#bluetooth,
+#network,
+#pulseaudio
+{
+  background-color: #1a1b26;
+  padding: 0.3rem 0.7rem;
+  margin: 5px 0;
+  border-radius: 0;
+  min-width: 0;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#bluetooth:hover,
+#network:hover,
+#pulseaudio:hover
+{
+  background-color: rgb(41, 42, 53);
+}
+
+#cpu {
+  color: #9ece6a;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+#memory {
+  color: #e0af68;
+}
+
+#temperature {
+  color: #f7768e;
+}
+
+#pulseaudio {
+  color: #bb9af7;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+#clock {
+  background-color: #1a1b26;
+  padding: 0.3rem 0.7rem;
+
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 8px;
+  margin-right: 0px;
+
+  border-radius: 6px;
+  min-width: 0;
+
+  transition: background-color 0.2s ease-in-out;
+  color: #99d1db;
+}
+
+#network.wifi {
+  color: #7dcfff;
+}
+
+#network.ethernet {
+  color: #7dcfff;
+}
+
+#bluetooth.on {
+  color: #2196f3;
+}
+
+#bluetooth.connected {
+  color: #7aa2f7;
+}
+
+#clock {
+  color: #99d1db;
+}
+
+/* ==========================================================
+   Tooltip
+   ========================================================== */
+
+tooltip {
+  background-color: #1a1b26;
+  color: #dddddd;
+  padding: 5px 12px;
+  margin: 5px 0px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+}
+
