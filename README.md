@@ -59,7 +59,7 @@ Personal Nix flake for my Linux desktops (with room for macOS later). It keeps s
 - **CLI base**: zsh + starship, zellij, direnv, git defaults, fzf, custom package set in `modules/home/share`.
 
 ## Neovim
-Neovim is enabled via Home Manager and sources my external config (`inputs.nvim-config`, repo: [TangSiyang2001/diy.nvim](https://github.com/TangSiyang2001/diy.nvim)) directly into `~/.config/nvim`. Extra build/runtime deps are pre-wrapped (nixd, lua-language-server, stylua, nixfmt, statix, deadnix, rg, fzf, shellcheck/shfmt, sql/toml/yaml/markdown/Actions tooling) so LSPs, formatters, and Telescope work out of the box.
+Neovim is enabled via Home Manager and sources my external config (`inputs.nvim-config`, repo: [Hastyshell/diy.nvim](https://github.com/Hastyshell/diy.nvim)) directly into `~/.config/nvim`. Extra build/runtime deps are pre-wrapped (nixd, lua-language-server, stylua, nixfmt, statix, deadnix, rg, fzf, shellcheck/shfmt, sql/toml/yaml/markdown/Actions tooling) so LSPs, formatters, and Telescope work out of the box.
 
 ## Custom options
 See `options/default.nix` for feature switches like `custom.linux.desktop.wm.niri.enable`, `custom.linux.desktop.bar.waybar.enable`, `custom.nixos.graphics.nvidia.enable`, `custom.nixos.secureBoot.lanzaboote.enable`, `custom.nixos.desktop.remoteDesktop.sunshine.enable`, etc. Hosts compose these to turn features on/off per machine.
