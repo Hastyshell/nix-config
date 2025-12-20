@@ -3,7 +3,7 @@
     ./pkgs.nix
     ./zsh.nix
     ./starship.nix
-    ./zellij.nix
+    ./zellij
     ./neovim.nix
     ./fzf.nix
     ./git.nix
