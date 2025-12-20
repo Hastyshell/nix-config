@@ -6,6 +6,7 @@
     settings = {
       window.decorations = "None";
       font = {
+        size = 12.25;
         bold = {
           family = lib.mkForce "JetBrainsMono Nerd Font Mono";
           style = "Bold";
