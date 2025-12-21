@@ -15,6 +15,7 @@
     file-roller
 
     mypkgs.xwechat
+    feishu
   ];
 
 }
