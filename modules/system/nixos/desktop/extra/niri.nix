@@ -30,10 +30,15 @@
 
       # ls /run/current-system/sw/share/xdg-desktop-portal/portals/
       extraPortals = with pkgs; [
+        xdg-desktop-portal-gtk # enable file picker and URI opening
         xdg-desktop-portal-gnome # for screensharing
       ];
-    };
 
+      config.common.default = [
+        "gtk"
+        "gnome"
+      ];
+    };
   };
 
 }
