@@ -1,6 +1,6 @@
 {
   imports = [
-    ./walker.nix
+    ./walker
     ./niri.nix
     ./swayidle.nix
     ./waybar

@@ -24,11 +24,17 @@
       enable = true;
       runAsService = true; # Note: this option isn't supported in the NixOS module only in the home-manager module
       config = {
-        # theme = "tokyo-night";
+        theme = "tokyo-night";
         keybinds.quick_activate = [ ];
       };
       themes = {
-
+        "tokyo-night" = {
+          style = builtins.readFile ./style.css;
+          layouts = {
+            "layout" = builtins.readFile ./layout.xml;
+            "item_clipboard" = builtins.readFile ./items/clipboard.xml;
+          };
+        };
       };
 
       # All options from the config.toml can be used here https://github.com/abenz1267/walker/blob/master/resources/config.toml

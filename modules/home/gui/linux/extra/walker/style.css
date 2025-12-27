@@ -1,0 +1,200 @@
+@define-color selected-text #7dcfff;
+@define-color text #f5f5f5;
+@define-color base #1a1b26;
+@define-color border #33ccff;
+@define-color foreground #f5f5f5;
+@define-color background #1a1b26;
+
+* {
+  all: unset;
+}
+
+* {
+  font-family: monospace;
+  font-size: 18px;
+  color: @text;
+}
+
+scrollbar {
+  opacity: 0;
+}
+
+.normal-icons {
+  -gtk-icon-size: 16px;
+}
+
+.large-icons {
+  -gtk-icon-size: 32px;
+}
+
+.box-wrapper {
+  background: alpha(@base, 0.95);
+  padding: 20px 20px 8px 20px;
+  border: 2px solid @border;
+  border-radius: 12px;
+}
+
+/* Clipboard keeps a wider window */
+.clipboard .box-wrapper {
+  min-width: 900px;
+}
+
+.preview-box {
+}
+
+.box {
+}
+
+.search-container {
+  background: @base;
+  padding: 10px;
+}
+
+.input placeholder {
+  opacity: 0.5;
+}
+
+.input {
+}
+
+.input:focus,
+.input:active {
+  box-shadow: none;
+  outline: none;
+}
+
+.content-container {
+}
+
+.placeholder {
+}
+
+.scroll {
+}
+
+.list {
+}
+
+child,
+child > * {
+}
+
+child:hover .item-box {
+}
+
+child:selected .item-box {
+}
+
+child:selected .item-box * {
+  color: @selected-text;
+}
+
+.item-box {
+  padding-left: 14px;
+}
+
+.item-text-box {
+  all: unset;
+  padding: 14px 0;
+}
+
+.item-text {
+}
+
+.item-subtext {
+  font-size: 0px;
+  min-height: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.item-image {
+  margin-right: 14px;
+  -gtk-icon-transform: scale(0.9);
+}
+
+.current {
+  font-style: italic;
+}
+
+.keybinds {
+  background: alpha(@base, 0.96);
+  padding: 8px 14px;
+  margin-top: 18px;
+  border-top: 1px solid alpha(@border, 0.45);
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 400;
+  opacity: 0.7;
+  color: alpha(@foreground, 0.55);
+}
+
+/* Force smaller font for all keybind children */
+.keybinds * {
+  font-size: 12px;
+}
+
+.keybinds label {
+  color: alpha(@foreground, 0.6);
+}
+
+/* Keybind content vs key styling */
+.keybind-bind {
+  font-family: monospace;
+  text-transform: lowercase;
+  letter-spacing: 0.03em;
+  color: alpha(@foreground, 0.45);
+}
+
+.keybind-label {
+  font-family: sans-serif;
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid alpha(@foreground, 0.35);
+  color: alpha(@foreground, 0.7);
+}
+
+.clipboard .scroll {
+  border-right: 1px solid alpha(@border, 0.4);
+}
+
+.preview {
+  padding: 8px;
+}
+
+/* Smaller font in preview for better reading (esp. clipboard) */
+.preview * {
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* Clipboard-specific list styling */
+.clipboard-item .item-text-box {
+  padding: 4px 0;
+}
+
+.clipboard-item .item-text {
+  font-size: 16px;
+}
+
+.clipboard-item .item-subtext {
+  font-size: 12px;
+  min-height: 0;
+  opacity: 0.6;
+}
+
+child:selected .clipboard-item {
+  background: alpha(@border, 0.12);
+}
+
+/* Todo-specific list styling: show time/info and highlight like clipboard */
+.todo .item-subtext {
+  font-size: 12px;
+  min-height: 0;
+  opacity: 0.6;
+}
+
+child:selected .todo {
+  background: alpha(@border, 0.12);
+}
+
