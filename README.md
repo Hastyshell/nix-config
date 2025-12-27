@@ -2,6 +2,10 @@
 
 Personal Nix flake for my Linux desktops (with room for macOS later). It keeps system and home configuration in one place, driven by small feature flags and a Wayland-first desktop stack.
 
+## Screenshots
+![Wayland desktop with Niri and Waybar](assets/screenshot1.png)
+![Niri overview](assets/screenshot2.png)
+
 ## Why Nix and NixOS
 
 - Manage system, desktop, and development environments as code rather than ad‑hoc tweaks.
@@ -26,10 +30,6 @@ Personal Nix flake for my Linux desktops (with room for macOS later). It keeps s
 - Keep the bar minimal and focused, showing only information that matters in daily use; redundant items belong in the launcher, not on the bar.
 - Concentrate bar elements toward the top‑right to stay out of the way and reduce visual noise.
 - Treat aesthetics as “calm and coherent enough,” preferring simple, harmonious visuals over flashy themes.
-
-## Screenshots
-![Wayland desktop with Niri and Waybar](assets/screenshot1.png)
-![Niri overview](assets/screenshot2.png)
 
 ## Repo layout
 - `flake.nix`: Entrypoint using `flake-parts`, overlays, and a custom package set `mypkgs`.
