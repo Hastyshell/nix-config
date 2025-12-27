@@ -16,6 +16,8 @@
     # keep preference
     # use "alacritty --working-directory %f" to open terminal
     programs.xfconf.enable = true;
+    # add this after environment.systemPackages, otherwise it won't be found
+    programs.dconf.enable = true;
 
     services.gvfs.enable = true; # Mount, trash, and other functionalities
     services.tumbler.enable = true; # Thumbnail support for images

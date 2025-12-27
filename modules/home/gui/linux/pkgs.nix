@@ -10,7 +10,8 @@
     xdg-utils # provides cli tools such as `xdg-mime` `xdg-open`
     xdg-user-dirs
     libnotify
-    adwaita-icon-theme
+    papirus-icon-theme
+    hicolor-icon-theme
     swww
     file-roller
     wtype
