@@ -10,6 +10,7 @@
     ./xdg.nix
     ./kanshi.nix
     ./obs.nix
+    ./gtk.nix
     ./pkgs.nix
     ./extra
   ];
