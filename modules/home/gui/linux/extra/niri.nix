@@ -141,6 +141,21 @@ in
           allow-when-locked = true;
           action = spawn "brightnessctl" "--class=backlight" "set" "10%-";
         };
+        # universal copy paste cannot work through wtype
+        # since this is a bug on niri: https://github.com/YaLTeR/niri/pull/2246
+        #
+        # "Mod+X" = {
+        #   action = spawn-sh "wtype -k XF86Cut";
+        #   hotkey-overlay.title = "Universal cut";
+        # };
+        # "Mod+C" = {
+        #   action = spawn-sh "wtype -k XF86Copy";
+        #   hotkey-overlay.title = "Universal copy";
+        # };
+        # "Mod+V" = {
+        #   action = spawn-sh "wtype -k XF86Paste";
+        #   hotkey-overlay.title = "Universal paste";
+        # };
         "Mod+O" = {
           repeat = true;
           action = toggle-overview;
@@ -264,7 +279,7 @@ in
 
         "Mod+Ctrl+F".action = expand-column-to-available-width;
 
-        "Mod+C".action = center-column;
+        "Mod+Alt+C".action = center-column;
 
         "Mod+Ctrl+C".action = center-visible-columns;
         "Mod+Minus".action = set-column-width "-10%";
@@ -273,7 +288,7 @@ in
         "Mod+Shift+Minus".action = set-window-height "-10%";
         "Mod+Shift+Equal".action = set-window-height "+10%";
 
-        "Mod+V".action = toggle-window-floating;
+        "Mod+Alt+V".action = toggle-window-floating;
         "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
 
         "Mod+W".action = toggle-column-tabbed-display;

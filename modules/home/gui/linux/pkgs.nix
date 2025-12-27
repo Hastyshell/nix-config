@@ -13,6 +13,7 @@
     adwaita-icon-theme
     swww
     file-roller
+    wtype
 
     mypkgs.xwechat
     feishu

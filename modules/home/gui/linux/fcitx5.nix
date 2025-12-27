@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 {
   i18n.inputMethod = {
     enable = true;
@@ -17,6 +17,12 @@
           "Groups/0/Items/0".Name = "keyboard-us";
           "Groups/0/Items/1".Name = "pinyin";
           GroupOrder."0" = "Default";
+        };
+        addons = {
+          clipboard.globalSection = {
+            TriggerKey = "";
+            PastePrimaryKey = "";
+          };
         };
       };
     };
