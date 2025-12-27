@@ -70,7 +70,7 @@ in
           sh = "swww-daemon -n swww-background & swww img -n swww-background --transition-type center ${wallpapers}/lakeside-sunset-pink.png";
         }
         {
-          sh = "swww-daemon -n swww-backdrop & swww img -n swww-backdrop --transition-type center ${wallpapers}/nord.png";
+          sh = "swww-daemon -n swww-backdrop & swww img -n swww-backdrop --transition-type center ${wallpapers}/lakeside-sunset-dark.png";
         }
         {
           sh = "waybar";
