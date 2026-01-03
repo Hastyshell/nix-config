@@ -293,12 +293,15 @@ in
 
         "Mod+W".action = toggle-column-tabbed-display;
 
-        "Print".action.screenshot = {
-        };
+        # "Print".action.screenshot = {
+        # };
+        "Print".action = spawn "satty-shot";
         "Ctrl+Print".action.screenshot-screen = {
         };
         "Alt+Print".action.screenshot-window = {
         };
+        # a mac like shortcut
+        "Mod+Shift+4".action = spawn "satty-shot";
 
         # Applications such as remote-desktop clients and software KVM switches may
         # request that niri stops processing the keyboard shortcuts defined here

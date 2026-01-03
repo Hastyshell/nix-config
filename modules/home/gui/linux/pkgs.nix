@@ -17,6 +17,7 @@
     wtype
 
     mypkgs.xwechat
+    mypkgs.satty-shot
     feishu
     libreoffice
   ];
