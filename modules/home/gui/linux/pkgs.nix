@@ -18,6 +18,7 @@
 
     mypkgs.xwechat
     feishu
+    libreoffice
   ];
 
 }
