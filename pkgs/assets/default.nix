@@ -1,4 +1,4 @@
-{ lib, stdenv }:
+{ lib, stdenv, ... }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "assets";
   version = "1.0";
