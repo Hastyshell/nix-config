@@ -22,8 +22,6 @@
     sysbench
     systemctl-tui
 
-    # system tools
-    sbctl # secure boot key manager
     psmisc # killall/pstree/prtstat/fuser/...
     lm_sensors # for `sensors` command
     ethtool
