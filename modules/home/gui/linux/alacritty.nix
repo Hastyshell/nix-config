@@ -44,6 +44,10 @@
         save_to_clipboard = true;
         semantic_escape_chars = '',│`|:"' ()[]{}<>	'';
       };
+
+      env = {
+        TERM = "xterm-256color";
+      };
     };
   };
 }
