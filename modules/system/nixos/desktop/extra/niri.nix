@@ -32,6 +32,7 @@
       extraPortals = with pkgs; [
         xdg-desktop-portal-gtk # enable file picker and URI opening
         xdg-desktop-portal-gnome # for screensharing
+        xdg-desktop-portal-hyprland # for screensharing
       ];
 
       config.common.default = [
