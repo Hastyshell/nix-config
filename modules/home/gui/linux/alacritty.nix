@@ -8,19 +8,19 @@
       font = {
         size = 12.25;
         bold = {
-          family = lib.mkForce "JetBrainsMono Nerd Font Mono";
+          family = lib.mkForce "JetBrainsMono Nerd Font";
           style = "Bold";
         };
         bold_italic = {
-          family = lib.mkForce "JetBrainsMono Nerd Font Mono";
+          family = lib.mkForce "JetBrainsMono Nerd Font";
           style = "Bold Italic";
         };
         italic = {
-          family = lib.mkForce "JetBrainsMono Nerd Font Mono";
+          family = lib.mkForce "JetBrainsMono Nerd Font";
           style = "Italic";
         };
         normal = {
-          family = lib.mkForce "JetBrainsMono Nerd Font Mono";
+          family = lib.mkForce "JetBrainsMono Nerd Font";
           style = "Regular";
         };
 
