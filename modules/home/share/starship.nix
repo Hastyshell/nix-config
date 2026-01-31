@@ -18,7 +18,7 @@
           disabled = false;
           style = "bg:#a3aed2 fg:#090c0c";
           symbols = {
-            NixOS = "  ";
+            NixOS = "  ";
             Macos = "  ";
           };
         };
