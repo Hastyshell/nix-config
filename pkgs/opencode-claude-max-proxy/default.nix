@@ -23,10 +23,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     cp -r bin/. "$out/share/opencode-claude-max-proxy/bin/"
     cp -r src/. "$out/share/opencode-claude-max-proxy/src/"
 
-    # Expose the OpenCode session-tracking plugin at a stable, well-known path.
-    mkdir -p "$out/share/opencode-plugins"
-    cp src/plugin/claude-max-headers.ts "$out/share/opencode-plugins/"
-
     mkdir -p "$out/bin"
 
     # claude-max-proxy: copies sources to a writable user directory on first
