@@ -38,16 +38,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       ${./claude-max-proxy.sh} > "$out/bin/claude-max-proxy"
     chmod +x "$out/bin/claude-max-proxy"
 
-    # opencode-with-claude-max: thin helper that points opencode at the local
-    # proxy with sensible defaults.
-    cat > "$out/bin/opencode-with-claude-max" << 'WRAPPER'
-#!/usr/bin/env bash
-export ANTHROPIC_API_KEY="''${ANTHROPIC_API_KEY:-dummy}"
-export ANTHROPIC_BASE_URL="''${ANTHROPIC_BASE_URL:-http://127.0.0.1:3456}"
-exec opencode "$@"
-WRAPPER
-    chmod +x "$out/bin/opencode-with-claude-max"
-
     runHook postInstall
   '';
 
