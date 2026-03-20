@@ -41,7 +41,10 @@
           ruff
         ]
       ))
-    ];
+    ]
+    ++ (with pkgs.mypkgs; [
+      opencode-claude-max-proxy
+    ]);
 
   # use program to make stylix work
   programs.btop.enable = true;
