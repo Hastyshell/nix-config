@@ -9,6 +9,7 @@
     ./git.nix
     ./direnv.nix
     ./opencode.nix
+    ./claude.nix
   ];
 
   xresources.properties = {
