@@ -53,6 +53,44 @@ nix build .#nixosConfigurations.hasty-desktop.config.system.build.toplevel
 
 Replace `hasty-desktop` with `vmware-desktop` to check the other host.
 
+## Commit Messages
+
+Use **Conventional Commits** for all new commits:
+
+```text
+type(scope): subject
+```
+
+- Preferred types in this repository: `feat`, `fix`, `docs`, `chore`.
+- Use the affected component/module as the scope when possible: `alacritty`,
+  `zellij`, `opencode`, `readme`, `flake.lock`, `home`, `overlays`.
+- Keep the subject concise, lowercase, and action-oriented.
+- Prefer `docs(readme): ...` over bare `readme: ...`.
+- Prefer `chore(flake.lock): update` for lockfile updates.
+- Treat installs, new integrations, and user-visible config additions as `feat`.
+- Treat bug fixes, compatibility fixes, and broken runtime behavior as `fix`.
+- Treat maintenance, cleanup, package source swaps, removals, and version bumps
+  as `chore`.
+- Use `refactor` only when the code/config structure changes without meaningfully
+  changing behavior. It should be rare in this repository.
+
+Examples:
+
+```text
+feat(alacritty): use Nerd Font instead of Nerd Font Mono
+fix(opencode): add node and bun to claude-max-proxy runtime PATH
+docs(agents): add AGENTS.md for coding agents
+chore(flake.lock): update
+```
+
+Optional local enforcement for this clone:
+
+```bash
+ln -sf ../../.githooks/commit-msg .git/hooks/commit-msg
+```
+
+The hook accepts `Merge`, `Revert`, `fixup!`, and `squash!` commits unchanged.
+
 ## Code Style
 
 ### Formatter

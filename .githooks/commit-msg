@@ -1,0 +1,53 @@
+#!/bin/sh
+
+set -eu
+
+msg_file=$1
+subject=
+
+while IFS= read -r line || [ -n "$line" ]; do
+  case "$line" in
+    '' | '#'*)
+      continue
+      ;;
+    *)
+      subject=$line
+      break
+      ;;
+  esac
+done < "$msg_file"
+
+[ -n "$subject" ] || exit 0
+
+case "$subject" in
+  Merge\ * | Revert\ * | fixup!\ * | squash!\ *)
+    exit 0
+    ;;
+esac
+
+pattern='^(feat|fix|docs|chore|refactor)(\([a-z0-9][a-z0-9./-]*\))?: [a-z0-9]'
+
+if printf '%s\n' "$subject" | grep -Eq "$pattern"; then
+  exit 0
+fi
+
+cat >&2 <<'EOF'
+Invalid commit message.
+
+Expected format:
+  type(scope): subject
+
+Allowed types:
+  feat, fix, docs, chore, refactor
+
+Examples:
+  feat(alacritty): use Nerd Font instead of Nerd Font Mono
+  fix(opencode): add node and bun to claude-max-proxy runtime PATH
+  docs(agents): add AGENTS.md for coding agents
+  chore(flake.lock): update
+
+Special cases allowed unchanged:
+  Merge ..., Revert ..., fixup! ..., squash! ...
+EOF
+
+exit 1
