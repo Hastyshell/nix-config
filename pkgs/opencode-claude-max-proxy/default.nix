@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchFromGitHub, bun, ... }:
+{ lib, stdenvNoCC, fetchFromGitHub, makeBinaryWrapper, bun, nodejs, ... }:
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "opencode-claude-max-proxy";
@@ -10,6 +10,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     rev = "18e10dbe13b01792258766ff04dc7848ff0c8287";
     hash = "sha256-7vEW2JpNXgTW8Aly5WLYZSDB/f1MRURXBHuU3CyFmto=";
   };
+
+  nativeBuildInputs = [ makeBinaryWrapper ];
 
   dontBuild = true;
 
@@ -31,8 +33,13 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       -e "s|@bunPath@|${bun}/bin/bun|g" \
       -e "s|@shareDir@|$out/share/opencode-claude-max-proxy|g" \
       -e "s|@version@|${finalAttrs.version}|g" \
-      ${./claude-max-proxy.sh} > "$out/bin/claude-max-proxy"
-    chmod +x "$out/bin/claude-max-proxy"
+      ${./claude-max-proxy.sh} > "$out/bin/.claude-max-proxy-unwrapped"
+    chmod +x "$out/bin/.claude-max-proxy-unwrapped"
+
+    # The Claude Agent SDK spawns cli.js (needs node) and internally
+    # requires bun in PATH for the subprocess to function correctly.
+    makeBinaryWrapper "$out/bin/.claude-max-proxy-unwrapped" "$out/bin/claude-max-proxy" \
+      --prefix PATH : "${lib.makeBinPath [ nodejs bun ]}"
 
     runHook postInstall
   '';
