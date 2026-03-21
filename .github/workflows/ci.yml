@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Evaluate flake
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Show flake outputs
+        run: nix flake show
+
+  build-nixos:
+    name: Build NixOS — ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - hasty-desktop
+          - vmware-desktop
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Build ${{ matrix.host }}
+        run: |
+          nix build \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            --no-link \
+            --print-build-logs
+
+  build-packages:
+    name: Build package — ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - assets
+          - opencode-claude-max-proxy
+          - satty-shot
+          - xwechat
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Build ${{ matrix.package }}
+        run: |
+          nix build \
+            ".#packages.x86_64-linux.mypkgs.${{ matrix.package }}" \
+            --no-link \
+            --print-build-logs
