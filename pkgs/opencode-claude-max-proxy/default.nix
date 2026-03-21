@@ -11,7 +11,6 @@
   curl,
   jq,
   coreutils,
-  systemd,
   unstable,
   ...
 }:
@@ -76,26 +75,6 @@ let
     };
   };
 
-  proxyControlCli = writeShellApplication {
-    name = "ocproxyctl";
-
-    runtimeInputs = [
-      coreutils
-      curl
-      jq
-      systemd
-    ];
-
-    text = builtins.readFile ./ocproxyctl.sh;
-
-    meta = {
-      description = "Status and log helper for claude-max-proxy";
-      homepage = proxyServer.meta.homepage;
-      license = proxyServer.meta.license;
-      platforms = proxyServer.meta.platforms;
-    };
-  };
-
   proxyTuiLauncher = writeShellApplication {
     name = "oc";
 
@@ -122,7 +101,6 @@ symlinkJoin {
   name = "${pname}-${version}";
   paths = [
     proxyServer
-    proxyControlCli
     proxyTuiLauncher
   ];
 

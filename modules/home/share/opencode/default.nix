@@ -1,13 +1,46 @@
 { pkgs, ... }:
 let
   claude-max-proxy = pkgs.mypkgs.opencode-claude-max-proxy;
+  mdnsDomain = "opencode.local";
   serveHost = "0.0.0.0";
   servePort = 8964;
   proxyHost = "127.0.0.1";
   proxyPort = 3456;
   proxyBaseUrl = "http://${proxyHost}:${toString proxyPort}";
+  occtl = pkgs.writeShellApplication {
+    name = "occtl";
+
+    runtimeInputs = with pkgs; [
+      coreutils
+      curl
+      jq
+      systemd
+    ];
+
+    text =
+      builtins.replaceStrings
+        [
+          "@proxyHost@"
+          "@proxyPort@"
+          "@servePort@"
+          "@mdnsDomain@"
+        ]
+        [
+          proxyHost
+          (toString proxyPort)
+          (toString servePort)
+          mdnsDomain
+        ]
+        (builtins.readFile ./occtl.sh);
+  };
 in
 {
+  # Stack-level control CLI for the persistent proxy + opencode-serve services.
+  home.packages = [
+    occtl
+    claude-max-proxy
+  ];
+
   programs.opencode = {
     enable = true;
     package = pkgs.unstable.opencode;
@@ -17,7 +50,7 @@ in
         "${claude-max-proxy}/share/opencode-claude-max-proxy/src/plugin/claude-max-headers.ts"
       ];
       server = {
-        mdnsDomain = "opencode.local";
+        mdnsDomain = mdnsDomain;
       };
     };
   };

@@ -4,10 +4,9 @@ Nix packaging and local workflow notes for `pkgs.mypkgs.opencode-claude-max-prox
 
 ## What this package contains
 
-This package installs three commands:
+This package installs two commands:
 
 - `claude-max-proxy` - the upstream proxy server itself
-- `ocproxyctl` - a small controller for the shared user service
 - `oc` - a launcher that starts OpenCode with a dedicated per-session proxy
 
 ## How it is packaged
@@ -37,18 +36,6 @@ Important environment variables:
 
 `CLAUDE_PROXY_WORKDIR` controls the Claude/OpenCode session working directory. It is not the proxy's own state directory.
 
-### `ocproxyctl`
-
-Controls the shared `systemd --user` service `claude-max-proxy.service`.
-
-Supported commands:
-
-- `ocproxyctl status`
-- `ocproxyctl restart`
-- `ocproxyctl logs`
-
-This command is intended for the long-running shared proxy used by the persistent OpenCode Web UI service.
-
 ### `oc`
 
 Starts a dedicated local proxy for a single OpenCode TUI session, then launches `opencode` against that proxy.
@@ -68,7 +55,7 @@ If startup fails, `oc` keeps the temporary proxy log and prints its path.
 
 There are two separate modes:
 
-- shared mode: `claude-max-proxy.service` + `ocproxyctl`, used by the persistent OpenCode Web UI / `opencode serve`
+- shared mode: `claude-max-proxy.service` + `opencode-serve.service`, managed by the Home Manager module
 - session mode: `oc`, used for one proxy per TUI session
 
 This split avoids port collisions and keeps TUI sessions isolated while still allowing a fixed-port shared server for the Web UI.

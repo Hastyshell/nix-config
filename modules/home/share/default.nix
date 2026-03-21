@@ -8,7 +8,7 @@
     ./fzf.nix
     ./git.nix
     ./direnv.nix
-    ./opencode.nix
+    ./opencode
     ./claude.nix
   ];
 
