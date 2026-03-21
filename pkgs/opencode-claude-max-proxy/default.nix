@@ -2,22 +2,16 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "opencode-claude-max-proxy";
-  version = "1.7.3";
+  version = "1.11.2";
 
   src = fetchFromGitHub {
     owner = "rynfar";
     repo = "opencode-claude-max-proxy";
-    rev = "18e10dbe13b01792258766ff04dc7848ff0c8287";
-    hash = "sha256-7vEW2JpNXgTW8Aly5WLYZSDB/f1MRURXBHuU3CyFmto=";
+    rev = "f9a85495a82a75f67eee2274f4ccb5eff4c1b3ef";
+    hash = "sha256-DSUcQlx2BKEXmRz9P3M2UmK8kvXWb601oP4W/byHh2s=";
   };
 
   nativeBuildInputs = [ makeBinaryWrapper ];
-
-  patches = [
-    # Skip re-sending the system prompt on session resume to reduce redundant
-    # token usage and improve prompt caching at the API level.
-    ./skip-system-context-on-resume.patch
-  ];
 
   dontBuild = true;
 
