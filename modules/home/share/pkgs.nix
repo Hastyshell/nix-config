@@ -20,6 +20,7 @@
 
       rclone
       rsync
+      gh
 
       hunspell # Spell checker
       ffmpeg-full
