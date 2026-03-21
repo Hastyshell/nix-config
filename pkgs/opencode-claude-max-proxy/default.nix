@@ -13,6 +13,12 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   nativeBuildInputs = [ makeBinaryWrapper ];
 
+  patches = [
+    # Skip re-sending the system prompt on session resume to reduce redundant
+    # token usage and improve prompt caching at the API level.
+    ./skip-system-context-on-resume.patch
+  ];
+
   dontBuild = true;
 
   installPhase = ''
