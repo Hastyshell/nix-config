@@ -13,7 +13,7 @@ modules/
   home/            # Home Manager modules (share/ = CLI, gui/linux/ = desktop)
 options/           # Centralized custom option declarations (options/default.nix)
 overlays/          # Nixpkgs overlays (unstable, niri, NUR)
-pkgs/              # Custom package derivations (accessed as pkgs.mypkgs.*)
+pkgs/              # Custom package derivations (internal pkgs.mypkgs.*, flat flake packages.* outputs)
 ```
 
 ## Skills

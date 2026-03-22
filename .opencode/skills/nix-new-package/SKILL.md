@@ -8,15 +8,17 @@ description: Workflow and patterns for creating a new custom package derivation 
 ### Overview
 
 `pkgs/default.nix` is a registry using `callPackage` for each derivation.
-Exposed as `pkgs.mypkgs.*` via the overlay in `flake.nix`.
+Exposed internally as `pkgs.mypkgs.*` via the overlay in `flake.nix`, and
+exported from the flake as flat `packages.<system>.<name>` outputs.
 
 ### Steps to Add a New Package
 
 1. Create a new directory under `pkgs/<package-name>/` with a `default.nix`.
 2. Register it in `pkgs/default.nix` using `callPackage`.
 3. Access it as `pkgs.mypkgs.<package-name>` in any module.
-4. Include `meta` with at least `description`.
-5. Run `nix fmt` and verify with `nix build`.
+4. Reference it from the flake as `.#packages.<system>.<package-name>`.
+5. Include `meta` with at least `description`.
+6. Run `nix fmt` and verify with `nix build`.
 
 ### Pattern: Shell Script Wrapper
 

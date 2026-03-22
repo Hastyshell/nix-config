@@ -63,4 +63,5 @@ Single/few parameters may stay on one line: `{ lib, ... }:`
   `extraSpecialArgs = { inherit inputs; };`.
 - External modules: `imports = [ inputs.foo.nixosModules.bar ];`
 - Internal modules: `self.nixosModules.default`, `self.customOptions`.
-- `pkgs.unstable.*` via overlay, `pkgs.mypkgs.*` via overlay.
+- `pkgs.unstable.*` via overlay, `pkgs.mypkgs.*` via overlay, and custom flake
+  packages exported as flat `packages.<system>.<name>` entries.
