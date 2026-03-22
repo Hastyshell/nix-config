@@ -4,16 +4,8 @@
   inputs,
   ...
 }:
-let
-  nvimConfig = pkgs.fetchFromGitHub {
-    owner = "Hastyshell";
-    repo = "diy.nvim";
-    rev = inputs.nvim-config.rev;
-    hash = inputs.nvim-config.narHash;
-  };
-in
 {
-  xdg.configFile."nvim".source = nvimConfig;
+  xdg.configFile."nvim".source = inputs.nvim-config.outPath;
   programs.neovim = {
     enable = true;
 

@@ -8,7 +8,7 @@
   config = lib.mkIf config.custom.linux.desktop.bar.waybar.enable {
     programs.waybar = {
       enable = true;
-      style = builtins.readFile ./style.css;
+      style = ./style.css;
       settings = {
         default = {
           layer = "top";
