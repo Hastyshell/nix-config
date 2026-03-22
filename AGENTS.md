@@ -16,6 +16,10 @@ overlays/          # Nixpkgs overlays (unstable, niri, NUR)
 pkgs/              # Custom package derivations (accessed as pkgs.mypkgs.*)
 ```
 
+## Conventions
+
+- If a module depends on companion files (TOML, CSS, scripts, templates, etc.), put it in its own directory with `default.nix` and colocate those files there.
+
 ## Skills
 
 Load these on-demand skills when performing related tasks:

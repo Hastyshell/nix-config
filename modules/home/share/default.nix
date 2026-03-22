@@ -2,7 +2,7 @@
   imports = [
     ./pkgs.nix
     ./zsh.nix
-    ./starship.nix
+    ./starship
     ./zellij
     ./neovim.nix
     ./fzf.nix
