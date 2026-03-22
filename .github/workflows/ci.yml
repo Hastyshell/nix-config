@@ -7,6 +7,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -69,25 +73,18 @@ jobs:
     name: Evaluate NixOS — ${{ matrix.host }}
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
+    if: >-
+      !cancelled() && !failure() &&
+      (needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
         host: [hasty-desktop, vmware-desktop]
     steps:
-      - id: gate
-        run: |
-          if [[ "${{ needs.detect-changes.outputs.nix }}" == "true" \
-             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          fi
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: actions/checkout@v4
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: DeterminateSystems/nix-installer-action@v15
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
       - name: Evaluate ${{ matrix.host }} (dry-run)
-        if: steps.gate.outputs.enabled == 'true'
         run: |
           nix build \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
@@ -96,31 +93,22 @@ jobs:
 
   # Custom packages — only built when package sources or flake.nix change.
   # Skipped for host-config-only or documentation-only changes.
-  # All packages run in parallel via matrix; the gate step centralises the skip
-  # logic so matrix names always expand correctly in the GitHub UI.
   build-packages:
     name: Build package — ${{ matrix.package }}
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
+    if: >-
+      !cancelled() && !failure() &&
+      (needs.detect-changes.outputs.packages == 'true' || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
         package: [assets, opencode-claude-max-proxy, satty-shot, xwechat]
     steps:
-      - id: gate
-        run: |
-          if [[ "${{ needs.detect-changes.outputs.packages }}" == "true" \
-             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          fi
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: actions/checkout@v4
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: DeterminateSystems/nix-installer-action@v15
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
       - name: Build ${{ matrix.package }}
-        if: steps.gate.outputs.enabled == 'true'
         run: |
           nix build \
             ".#packages.x86_64-linux.mypkgs.${{ matrix.package }}" \
@@ -134,19 +122,15 @@ jobs:
     name: Build NixOS — ${{ matrix.host }}
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
+    if: >-
+      !cancelled() && !failure() &&
+      (needs.detect-changes.outputs.lockfile == 'true' || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
         host: [hasty-desktop, vmware-desktop]
     steps:
-      - id: gate
-        run: |
-          if [[ "${{ needs.detect-changes.outputs.lockfile }}" == "true" \
-             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          fi
       - name: Free disk space
-        if: steps.gate.outputs.enabled == 'true'
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
         with:
           tool-cache: false
@@ -156,14 +140,10 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: actions/checkout@v4
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: DeterminateSystems/nix-installer-action@v15
-      - if: steps.gate.outputs.enabled == 'true'
-        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
       - name: Build ${{ matrix.host }}
-        if: steps.gate.outputs.enabled == 'true'
         run: |
           nix build \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
