@@ -68,35 +68,22 @@ jobs:
   # Lightweight NixOS evaluation — evaluates the full system closure for each
   # host without building any packages. Catches module option errors, missing
   # imports, and broken attribute paths cheaply.
-  # Runs on every non-documentation Nix change (both hosts in parallel via matrix).
   eval-nixos:
-    name: Evaluate NixOS — ${{ matrix.host }}
+    name: Evaluate NixOS
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
-    if: ${{ !cancelled() && !failure() }}
-    strategy:
-      fail-fast: false
-      matrix:
-        host: [hasty-desktop, vmware-desktop]
+    if: >-
+      !cancelled() && !failure() &&
+      (needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch')
     steps:
-      - name: Check gate
-        id: gate
-        run: |
-          if [[ "${{ needs.detect-changes.outputs.nix }}" == "true" \
-             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          fi
-      - if: steps.gate.outputs.run == 'true'
-        uses: actions/checkout@v4
-      - if: steps.gate.outputs.run == 'true'
-        uses: DeterminateSystems/nix-installer-action@v15
-      - if: steps.gate.outputs.run == 'true'
-        uses: DeterminateSystems/magic-nix-cache-action@v8
-      - name: Evaluate ${{ matrix.host }} (dry-run)
-        if: steps.gate.outputs.run == 'true'
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Evaluate all hosts (dry-run)
         run: |
           nix build \
-            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            ".#nixosConfigurations.hasty-desktop.config.system.build.toplevel" \
+            ".#nixosConfigurations.vmware-desktop.config.system.build.toplevel" \
             --dry-run \
             --print-build-logs
 
