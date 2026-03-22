@@ -6,6 +6,15 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+    inputs:
+      build-packages:
+        description: Build custom packages
+        type: boolean
+        default: false
+      build-nixos:
+        description: Full NixOS system build
+        type: boolean
+        default: false
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -97,7 +106,7 @@ jobs:
     if: >-
       !cancelled() && !failure() &&
       (needs.detect-changes.outputs.packages == 'true' && needs.detect-changes.outputs.lockfile != 'true'
-      || github.event_name == 'workflow_dispatch')
+      || github.event_name == 'workflow_dispatch' && inputs.build-packages)
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v15
@@ -122,7 +131,8 @@ jobs:
     needs: [detect-changes, check]
     if: >-
       !cancelled() && !failure() &&
-      (needs.detect-changes.outputs.lockfile == 'true' || github.event_name == 'workflow_dispatch')
+      (needs.detect-changes.outputs.lockfile == 'true'
+      || github.event_name == 'workflow_dispatch' && inputs.build-nixos)
     steps:
       - name: Free disk space
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
