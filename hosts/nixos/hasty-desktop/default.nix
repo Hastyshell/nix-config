@@ -16,6 +16,7 @@
     self.homeModules.default
     self.homeModules.gui.linux
   ];
+  enableSops = true;
   globalOptions = {
     custom.nixos.secureBoot.lanzaboote.enable = true;
     custom.linux.desktop.wm.niri.enable = true;

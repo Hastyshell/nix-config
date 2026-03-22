@@ -15,15 +15,28 @@ let
       modules,
       homeModules,
       globalOptions,
+      enableSops ? false,
       ...
     }:
+    let
+      sopsModules = inputs.nixpkgs.lib.optionals enableSops [
+        inputs.sops-nix.nixosModules.sops
+
+        {
+          sops = {
+            defaultSopsFile = ./${hostname}/secrets.yaml;
+            age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+          };
+        }
+      ];
+    in
     {
       ${hostname} = inputs.nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
         };
 
-        modules = modules ++ [
+        modules = modules ++ sopsModules ++ [
           globalOptions
 
           # since https://github.com/nixos/nixpkgs/issues/454884
@@ -42,15 +55,6 @@ let
 
           inputs.home-manager.nixosModules.home-manager
 
-          inputs.sops-nix.nixosModules.sops
-
-          {
-            sops = {
-              defaultSopsFile = ./${hostname}/secrets.yaml;
-              age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-            };
-          }
-
           {
             nix.settings.trusted-users = [
               "root"
@@ -64,7 +68,7 @@ let
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs; };
-              sharedModules = [
+              sharedModules = inputs.nixpkgs.lib.optionals enableSops [
                 inputs.sops-nix.homeManagerModules.sops
               ];
               users.${username} = {
@@ -80,7 +84,7 @@ let
                   name = fullName;
                   email = email;
                 };
-
+              } // inputs.nixpkgs.lib.optionalAttrs enableSops {
                 sops = {
                   defaultSopsFile = ./${hostname}/secrets.yaml;
                   age.keyFile = "/home/${username}/.config/sops/age/keys.txt";

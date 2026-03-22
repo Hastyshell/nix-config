@@ -1,6 +1,5 @@
 keys:
   - &hasty-desktop age1ch924fqpeaqgzum68878ka6gumcsg8j5lplggyp7flx0zkyh9f2sjjj6s2
-  - &vmware-desktop PLACEHOLDER_RUN_ssh-to-age_ON_VMWARE_DESKTOP
   - &hastyshell age1xyp24nt94qj8w8uezpll24egyej5l9a9ccl6r5atd7fd4asmgpqqhp4wa6
 
 creation_rules:
@@ -8,9 +7,4 @@ creation_rules:
     key_groups:
       - age:
           - *hasty-desktop
-          - *hastyshell
-  - path_regex: hosts/nixos/vmware-desktop/secrets\.yaml$
-    key_groups:
-      - age:
-          - *vmware-desktop
           - *hastyshell
