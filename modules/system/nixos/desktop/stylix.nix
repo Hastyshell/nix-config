@@ -8,9 +8,7 @@
 
   stylix = {
     enable = true;
-    # Keep the scheme in-repo so flake checks do not depend on realizing
-    # pkgs.base16-schemes during CI evaluation.
-    base16Scheme = ./tokyo-night-dark.yaml;
+    base16Scheme = "${inputs.stylix.inputs.tinted-schemes}/base16/tokyo-night-dark.yaml";
     polarity = "dark";
 
     fonts = {
