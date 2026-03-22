@@ -25,7 +25,7 @@ case "$subject" in
     ;;
 esac
 
-pattern='^(feat|fix|docs|chore|refactor)(\([a-z0-9][a-z0-9./-]*\))?: [a-z0-9]'
+pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z0-9][a-z0-9./-]*\))?!?: [a-z0-9]'
 
 if printf '%s\n' "$subject" | grep -Eq "$pattern"; then
   exit 0
@@ -38,11 +38,15 @@ Expected format:
   type(scope): subject
 
 Allowed types:
-  feat, fix, docs, chore, refactor
+  feat, fix, docs, style, refactor, perf, test, build, ci, chore
+
+Append ! before the colon for breaking changes:
+  feat(module)!: redesign option interface
 
 Examples:
   feat(alacritty): use Nerd Font instead of Nerd Font Mono
   fix(opencode): add node and bun to claude-max-proxy runtime PATH
+  ci(workflows): add selective manual build triggers
   docs(agents): add AGENTS.md for coding agents
   chore(flake.lock): update
 

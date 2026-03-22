@@ -5,26 +5,47 @@ description: Conventional Commits rules for this flake, including preferred type
 
 ## Commit Messages
 
-Use **Conventional Commits** for all new commits:
+Use **Conventional Commits** (v1.0.0) for all new commits:
 
 ```text
 type(scope): subject
+
+[optional body]
+
+[optional footer(s)]
 ```
 
 ### Types
 
-- `feat` -- installs, new integrations, user-visible config additions
-- `fix` -- bug fixes, compatibility fixes, broken runtime behavior
-- `docs` -- documentation changes
-- `chore` -- maintenance, cleanup, package source swaps, removals, version bumps
-- `refactor` -- structure changes without meaningful behavior change (rare in this repo)
+| Type       | When to use                                              |
+|------------|----------------------------------------------------------|
+| `feat`     | new packages, modules, integrations, user-visible config |
+| `fix`      | bug fixes, compatibility fixes, broken runtime behavior  |
+| `docs`     | documentation changes (README, AGENTS.md, etc.)          |
+| `style`    | formatting only (nix fmt, whitespace, semicolons)        |
+| `refactor` | structure changes without meaningful behavior change     |
+| `perf`     | performance improvements (build speed, caching)          |
+| `test`     | adding or updating test cases                            |
+| `build`    | build system changes (flake inputs, overlays)            |
+| `ci`       | CI/CD workflow and pipeline changes                      |
+| `chore`    | maintenance, cleanup, version bumps, removals            |
+
+### Breaking Changes
+
+Append `!` before the colon to flag a breaking change:
+
+```text
+feat(module)!: redesign option interface
+```
+
+A `BREAKING CHANGE:` footer can optionally provide more detail.
 
 ### Scopes
 
 Use the affected component/module as the scope when possible:
 
 ```text
-alacritty, zellij, opencode, readme, flake.lock, home, overlays
+alacritty, zellij, opencode, readme, flake.lock, home, overlays, workflows
 ```
 
 ### Subject Style
@@ -38,8 +59,11 @@ alacritty, zellij, opencode, readme, flake.lock, home, overlays
 ```text
 feat(alacritty): use Nerd Font instead of Nerd Font Mono
 fix(opencode): add node and bun to claude-max-proxy runtime PATH
+ci(workflows): add selective manual build triggers
 docs(agents): add AGENTS.md for coding agents
 chore(flake.lock): update
+refactor(modules): split networking into per-host files
+feat(hyprland)!: replace sway keybindings with hyprland native
 ```
 
 ### Enforcement
