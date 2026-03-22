@@ -9,64 +9,116 @@ permissions:
   contents: read
 
 jobs:
-  # Fast gate: evaluates all flake outputs and validates their structure.
-  # Runs on every push and PR. Catches syntax errors, missing imports, and
-  # option type mismatches in seconds without building anything.
-  #
-  # NOTE — nixos-test: once NixOS tests are defined under the flake's
-  # `checks` output (e.g. checks."x86_64-linux".my-test = pkgs.nixosTest { … }),
-  # `nix flake check` will automatically discover and run them here.
-  # GitHub Actions ubuntu-latest runners support KVM, so VM-based tests work.
-  check:
-    name: Evaluate & check flake
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v15
-      - uses: DeterminateSystems/magic-nix-cache-action@v8
-      - uses: cachix/cachix-action@v15
-        with:
-          name: hastyshell
-          # Auth token is optional: reads from cache anonymously when absent,
-          # uploads build outputs to Cachix when present.
-          # Set CACHIX_AUTH_TOKEN in GitHub repo secrets to enable uploads.
-          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-      - name: Show flake outputs
-        run: nix flake show
-      - name: Check flake
-        # Evaluates all checks.* outputs (including NixOS tests once defined),
-        # and validates the type-correctness of packages/nixosConfigurations.
-        run: nix flake check --no-build
-
-  # Detects whether flake.lock changed so build-nixos can be skipped on PRs
-  # and branches that only touch config/modules (not dependency pins).
+  # Detects which categories of files changed.
+  # All conditional jobs gate on these outputs.
+  # - nix:      any Nix-related file (.nix, flake.lock, hosts/, modules/, pkgs/, …)
+  # - lockfile: flake.lock specifically (triggers full rebuild)
+  # - packages: pkgs/ or flake.nix (custom package derivations)
+  # When none of these match (e.g. docs-only change), all downstream jobs are skipped.
   detect-changes:
     name: Detect changed files
     runs-on: ubuntu-latest
     outputs:
+      nix: ${{ steps.filter.outputs.nix }}
       lockfile: ${{ steps.filter.outputs.lockfile }}
+      packages: ${{ steps.filter.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
         id: filter
         with:
           filters: |
+            nix:
+              - '**/*.nix'
+              - 'flake.lock'
+              - 'pkgs/**'
+              - 'hosts/**'
+              - 'modules/**'
+              - 'options/**'
+              - 'overlays/**'
             lockfile:
               - 'flake.lock'
+            packages:
+              - 'pkgs/**'
+              - 'flake.nix'
 
-  # Full NixOS system build — expensive (30–60 min cold, seconds with cache).
-  # Only runs when:
-  #   - pushing to main (every merged commit must produce a bootable system), or
-  #   - flake.lock changed on any branch/PR (dependency updates need full rebuild), or
-  #   - triggered manually via workflow_dispatch.
+  # Fast gate: evaluates all flake outputs and validates their structure.
+  # Catches syntax errors, missing imports, and option type mismatches in seconds.
+  # Skipped for documentation-only changes (no Nix files touched).
+  check:
+    name: Evaluate & check flake
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Show flake outputs
+        run: nix flake show
+      - name: Check flake
+        run: nix flake check --no-build
+
+  # Lightweight NixOS evaluation — evaluates the full system closure for each
+  # host without building any packages. Catches module option errors, missing
+  # imports, and broken attribute paths cheaply.
+  # Runs on every non-documentation Nix change (both hosts in parallel).
+  eval-nixos:
+    name: Evaluate NixOS — ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    needs: [detect-changes, check]
+    if: needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - hasty-desktop
+          - vmware-desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Evaluate ${{ matrix.host }} (dry-run)
+        run: |
+          nix build \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            --dry-run \
+            --print-build-logs
+
+  # Custom packages — only built when package sources or flake.nix change.
+  # Skipped for host-config-only or documentation-only changes.
+  build-packages:
+    name: Build package — ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    needs: [detect-changes, check]
+    if: needs.detect-changes.outputs.packages == 'true' || github.event_name == 'workflow_dispatch'
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - assets
+          - opencode-claude-max-proxy
+          - satty-shot
+          - xwechat
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Build ${{ matrix.package }}
+        run: |
+          nix build \
+            ".#packages.x86_64-linux.mypkgs.${{ matrix.package }}" \
+            --no-link \
+            --print-build-logs
+
+  # Full NixOS system build — expensive (30–60 min cold).
+  # Only runs when flake.lock changes (dependency updates need a full rebuild)
+  # or triggered manually. Both hosts build in parallel via matrix.
   build-nixos:
     name: Build NixOS — ${{ matrix.host }}
     runs-on: ubuntu-latest
-    needs: [check, detect-changes]
-    if: |
-      github.ref == 'refs/heads/main' ||
-      github.event_name == 'workflow_dispatch' ||
-      needs.detect-changes.outputs.lockfile == 'true'
+    needs: [detect-changes, check]
+    if: needs.detect-changes.outputs.lockfile == 'true' || github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
@@ -87,42 +139,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v15
       - uses: DeterminateSystems/magic-nix-cache-action@v8
-      - uses: cachix/cachix-action@v15
-        with:
-          name: hastyshell
-          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
       - name: Build ${{ matrix.host }}
         run: |
           nix build \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
-            --no-link \
-            --print-build-logs
-
-  # Custom packages — always built on every push and PR since they are
-  # lightweight compared to a full NixOS closure.
-  build-packages:
-    name: Build package — ${{ matrix.package }}
-    runs-on: ubuntu-latest
-    needs: check
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - assets
-          - opencode-claude-max-proxy
-          - satty-shot
-          - xwechat
-    steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v15
-      - uses: DeterminateSystems/magic-nix-cache-action@v8
-      - uses: cachix/cachix-action@v15
-        with:
-          name: hastyshell
-          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-      - name: Build ${{ matrix.package }}
-        run: |
-          nix build \
-            ".#packages.x86_64-linux.mypkgs.${{ matrix.package }}" \
             --no-link \
             --print-build-logs
