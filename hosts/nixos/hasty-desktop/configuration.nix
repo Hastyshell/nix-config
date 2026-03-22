@@ -39,6 +39,9 @@
     "usbcore.autosuspend=-1"
   ];
 
+  custom.nixos.sops.enable = true;
+  sops.defaultSopsFile = ./secrets.yaml;
+
   networking.networkmanager.enable = true;
 
   # Configure network proxy if necessary

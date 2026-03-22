@@ -26,6 +26,8 @@
 
         custom.nixos.desktop.remoteDesktop.sunshine.enable =
           lib.mkEnableOption "enable sunshine as remote desktop solution";
+
+        custom.nixos.sops.enable = lib.mkEnableOption "enable sops-nix secrets management";
       };
     };
 }

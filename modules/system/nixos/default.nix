@@ -6,5 +6,6 @@
     ./networking.nix
     ./virtualization.nix
     ./secureboot.nix
+    ./sops.nix
   ];
 }
