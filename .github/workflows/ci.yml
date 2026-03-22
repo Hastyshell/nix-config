@@ -114,10 +114,10 @@ jobs:
       - name: Build all packages
         run: |
           nix build \
-            ".#packages.x86_64-linux.mypkgs.assets" \
-            ".#packages.x86_64-linux.mypkgs.opencode-claude-max-proxy" \
-            ".#packages.x86_64-linux.mypkgs.satty-shot" \
-            ".#packages.x86_64-linux.mypkgs.xwechat" \
+            ".#packages.x86_64-linux.assets" \
+            ".#packages.x86_64-linux.opencode-claude-max-proxy" \
+            ".#packages.x86_64-linux.satty-shot" \
+            ".#packages.x86_64-linux.xwechat" \
             --no-link \
             --print-build-logs
 

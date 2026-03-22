@@ -85,7 +85,7 @@
           };
 
           formatter = pkgs.nixfmt-rfc-style;
-          packages.mypkgs = import ./pkgs { inherit pkgs; };
+          packages = import ./pkgs { inherit pkgs; };
         };
     };
 }
