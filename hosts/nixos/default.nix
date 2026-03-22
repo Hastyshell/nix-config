@@ -42,6 +42,15 @@ let
 
           inputs.home-manager.nixosModules.home-manager
 
+          inputs.sops-nix.nixosModules.sops
+
+          {
+            sops = {
+              defaultSopsFile = ./${hostname}/secrets.yaml;
+              age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+            };
+          }
+
           {
             nix.settings.trusted-users = [
               "root"
@@ -55,6 +64,9 @@ let
               useGlobalPkgs = true;
               useUserPackages = true;
               extraSpecialArgs = { inherit inputs; };
+              sharedModules = [
+                inputs.sops-nix.homeManagerModules.sops
+              ];
               users.${username} = {
                 imports = homeModules ++ [ globalOptions ];
 
@@ -67,6 +79,11 @@ let
                 programs.git.settings.user = {
                   name = fullName;
                   email = email;
+                };
+
+                sops = {
+                  defaultSopsFile = ./${hostname}/secrets.yaml;
+                  age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
                 };
               };
             };
