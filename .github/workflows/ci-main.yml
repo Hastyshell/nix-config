@@ -1,18 +1,16 @@
-name: CI
+name: CI (main)
 
 on:
-  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   # Detects which categories of files changed.
-  # All conditional jobs gate on these outputs.
-  # - nix:      any Nix-related file (.nix, flake.lock, hosts/, modules/, pkgs/, …)
-  # - lockfile: flake.lock specifically (triggers full rebuild)
-  # - packages: pkgs/ or flake.nix (custom package derivations)
-  # When none of these match (e.g. docs-only change), all downstream jobs are skipped.
   detect-changes:
     name: Detect changed files
     runs-on: ubuntu-latest
@@ -41,8 +39,6 @@ jobs:
               - 'flake.nix'
 
   # Fast gate: evaluates all flake outputs and validates their structure.
-  # Catches syntax errors, missing imports, and option type mismatches in seconds.
-  # Skipped for documentation-only changes (no Nix files touched).
   check:
     name: Evaluate & check flake
     runs-on: ubuntu-latest
@@ -57,10 +53,7 @@ jobs:
       - name: Check flake
         run: nix flake check --no-build
 
-  # Lightweight NixOS evaluation — evaluates the full system closure for each
-  # host without building any packages. Catches module option errors, missing
-  # imports, and broken attribute paths cheaply.
-  # Runs on every non-documentation Nix change (both hosts in parallel).
+  # Lightweight NixOS evaluation — evaluates the full system closure for each host.
   eval-nixos:
     name: Evaluate NixOS — ${{ matrix.host }}
     runs-on: ubuntu-latest
@@ -84,7 +77,6 @@ jobs:
             --print-build-logs
 
   # Custom packages — only built when package sources or flake.nix change.
-  # Skipped for host-config-only or documentation-only changes.
   build-packages:
     name: Build package — ${{ matrix.package }}
     runs-on: ubuntu-latest
@@ -110,8 +102,7 @@ jobs:
             --print-build-logs
 
   # Full NixOS system build — expensive (30–60 min cold).
-  # Only runs when flake.lock changes (dependency updates need a full rebuild)
-  # or triggered manually. Both hosts build in parallel via matrix.
+  # Only runs when flake.lock changes or triggered manually.
   build-nixos:
     name: Build NixOS — ${{ matrix.host }}
     runs-on: ubuntu-latest
