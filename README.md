@@ -32,7 +32,7 @@ Personal Nix flake for my Linux desktops (with room for macOS later). It keeps s
 - Treat aesthetics as “calm and coherent enough,” preferring simple, harmonious visuals over flashy themes.
 
 ## Repo layout
-- `flake.nix`: Entrypoint using `flake-parts`, overlays, and a custom package set `mypkgs`.
+- `flake.nix`: Entrypoint using `flake-parts`, overlays, and a custom package set exposed internally as `pkgs.mypkgs.*` and externally as flat flake `packages.*` outputs.
 - `hosts/`: Per-machine definitions combining system modules + home-manager modules and user metadata.
 - `modules/`: Reusable building blocks
   - `system/`: NixOS modules (desktop, peripherals, stylix, secure boot, graphics, etc.)
@@ -56,7 +56,7 @@ Personal Nix flake for my Linux desktops (with room for macOS later). It keeps s
 - **File manager**: Thunar.
 - **Remote desktop**: Sunshine toggle.
 - **Theming**: Stylix plus curated wallpapers/icons in `pkgs/assets`.
-- **CLI base**: zsh + starship, zellij, direnv, git defaults, fzf, custom package set in `modules/home/share`.
+- **CLI base**: zsh + starship, zellij, direnv, git defaults, fzf, custom packages consumed internally via `pkgs.mypkgs.*`.
 
 ## Neovim
 Neovim is enabled via Home Manager and sources my external config (`inputs.nvim-config`, repo: [Hastyshell/diy.nvim](https://github.com/Hastyshell/diy.nvim)) directly into `~/.config/nvim`. Extra build/runtime deps are pre-wrapped (nixd, lua-language-server, stylua, nixfmt, statix, deadnix, rg, fzf, shellcheck/shfmt, sql/toml/yaml/markdown/Actions tooling) so LSPs, formatters, and Telescope work out of the box.
