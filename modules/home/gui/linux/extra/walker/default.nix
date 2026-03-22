@@ -2,6 +2,7 @@
   lib,
   config,
   inputs,
+  pkgs,
   ...
 }:
 {
@@ -22,6 +23,7 @@
 
     programs.walker = {
       enable = true;
+      package = pkgs.unstable.walker;
       runAsService = true; # Note: this option isn't supported in the NixOS module only in the home-manager module
       config = {
         theme = "tokyo-night";
