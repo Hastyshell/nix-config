@@ -5,50 +5,6 @@
   pkgs,
   ...
 }:
-let
-  walkerPackage = pkgs.rustPlatform.buildRustPackage rec {
-    pname = "walker";
-    version = (builtins.fromTOML (builtins.readFile "${inputs.walker.outPath}/Cargo.toml")).package.version;
-
-    # Use the fetched flake source directly here. The upstream package filters
-    # the source tree with `lib.fileset.toSource`, which creates another raw
-    # store source path that `nix flake check --no-build` can trip over on a
-    # clean runner.
-    src = inputs.walker.outPath;
-    cargoLock.lockFile = "${src}/Cargo.lock";
-
-    nativeBuildInputs = with pkgs; [
-      gobject-introspection
-      pkg-config
-      protobuf
-      wrapGAppsHook4
-    ];
-
-    buildInputs = with pkgs; [
-      glib
-      gtk4
-      gtk4-layer-shell
-      gdk-pixbuf
-      graphene
-      cairo
-      pango
-      poppler
-    ] ++ (with pkgs.gst_all_1; [
-      gstreamer
-      gst-plugins-base
-      gst-plugins-good
-      gst-libav
-    ]);
-
-    meta = {
-      description = "Wayland-native application runner";
-      homepage = "https://github.com/abenz1267/walker";
-      license = lib.licenses.mit;
-      platforms = lib.platforms.linux;
-      mainProgram = "walker";
-    };
-  };
-in
 {
 
   imports = [ inputs.walker.homeManagerModules.default ];
@@ -67,7 +23,7 @@ in
 
     programs.walker = {
       enable = true;
-      package = walkerPackage;
+      package = pkgs.unstable.walker;
       runAsService = true; # Note: this option isn't supported in the NixOS module only in the home-manager module
       config = {
         theme = "tokyo-night";
