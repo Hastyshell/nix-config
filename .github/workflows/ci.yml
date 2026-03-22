@@ -1,0 +1,171 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Detects which categories of files changed.
+  # All conditional jobs gate on these outputs.
+  # - nix:      any Nix-related file (.nix, flake.lock, hosts/, modules/, pkgs/, …)
+  # - lockfile: flake.lock specifically (triggers full rebuild)
+  # - packages: pkgs/ or flake.nix (custom package derivations)
+  # When none of these match (e.g. docs-only change), all downstream jobs are skipped.
+  detect-changes:
+    name: Detect changed files
+    runs-on: ubuntu-latest
+    outputs:
+      nix: ${{ steps.filter.outputs.nix }}
+      lockfile: ${{ steps.filter.outputs.lockfile }}
+      packages: ${{ steps.filter.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        id: filter
+        with:
+          filters: |
+            nix:
+              - '**/*.nix'
+              - 'flake.lock'
+              - 'pkgs/**'
+              - 'hosts/**'
+              - 'modules/**'
+              - 'options/**'
+              - 'overlays/**'
+            lockfile:
+              - 'flake.lock'
+            packages:
+              - 'pkgs/**'
+              - 'flake.nix'
+
+  # Fast gate: evaluates all flake outputs and validates their structure.
+  # Catches syntax errors, missing imports, and option type mismatches in seconds.
+  # Skipped for documentation-only changes (no Nix files touched).
+  check:
+    name: Evaluate & check flake
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Show flake outputs
+        run: nix flake show
+      - name: Check flake
+        run: nix flake check --no-build
+
+  # Lightweight NixOS evaluation — evaluates the full system closure for each
+  # host without building any packages. Catches module option errors, missing
+  # imports, and broken attribute paths cheaply.
+  # Runs on every non-documentation Nix change (both hosts in parallel via matrix).
+  eval-nixos:
+    name: Evaluate NixOS — ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    needs: [detect-changes, check]
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [hasty-desktop, vmware-desktop]
+    steps:
+      - id: gate
+        run: |
+          if [[ "${{ needs.detect-changes.outputs.nix }}" == "true" \
+             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: DeterminateSystems/nix-installer-action@v15
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Evaluate ${{ matrix.host }} (dry-run)
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          nix build \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            --dry-run \
+            --print-build-logs
+
+  # Custom packages — only built when package sources or flake.nix change.
+  # Skipped for host-config-only or documentation-only changes.
+  # All packages run in parallel via matrix; the gate step centralises the skip
+  # logic so matrix names always expand correctly in the GitHub UI.
+  build-packages:
+    name: Build package — ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    needs: [detect-changes, check]
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [assets, opencode-claude-max-proxy, satty-shot, xwechat]
+    steps:
+      - id: gate
+        run: |
+          if [[ "${{ needs.detect-changes.outputs.packages }}" == "true" \
+             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: DeterminateSystems/nix-installer-action@v15
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Build ${{ matrix.package }}
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          nix build \
+            ".#packages.x86_64-linux.mypkgs.${{ matrix.package }}" \
+            --no-link \
+            --print-build-logs
+
+  # Full NixOS system build — expensive (30–60 min cold).
+  # Only runs when flake.lock changes (dependency updates need a full rebuild)
+  # or triggered manually. Both hosts build in parallel via matrix.
+  build-nixos:
+    name: Build NixOS — ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    needs: [detect-changes, check]
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [hasty-desktop, vmware-desktop]
+    steps:
+      - id: gate
+        run: |
+          if [[ "${{ needs.detect-changes.outputs.lockfile }}" == "true" \
+             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Free disk space
+        if: steps.gate.outputs.enabled == 'true'
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: DeterminateSystems/nix-installer-action@v15
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Build ${{ matrix.host }}
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          nix build \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            --no-link \
+            --print-build-logs
