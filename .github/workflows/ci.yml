@@ -100,23 +100,21 @@ jobs:
             --dry-run \
             --print-build-logs
 
-  # Custom packages — only built when package sources or flake.nix change.
-  # Skipped for host-config-only or documentation-only changes.
+  # Custom packages — only built when package sources or flake.nix change
+  # AND flake.lock hasn't changed (build-nixos already covers packages in
+  # that case via a full system build).
   build-packages:
-    name: Build package — ${{ matrix.package }}
+    name: Build packages
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
     if: ${{ !cancelled() && !failure() }}
-    strategy:
-      fail-fast: false
-      matrix:
-        package: [assets, opencode-claude-max-proxy, satty-shot, xwechat]
     steps:
       - name: Check gate
         id: gate
         run: |
           if [[ "${{ needs.detect-changes.outputs.packages }}" == "true" \
-             || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+             && "${{ needs.detect-changes.outputs.lockfile }}" != "true" ]] \
+             || [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
       - if: steps.gate.outputs.run == 'true'
@@ -125,11 +123,14 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@v15
       - if: steps.gate.outputs.run == 'true'
         uses: DeterminateSystems/magic-nix-cache-action@v8
-      - name: Build ${{ matrix.package }}
+      - name: Build all packages
         if: steps.gate.outputs.run == 'true'
         run: |
           nix build \
-            ".#packages.x86_64-linux.mypkgs.${{ matrix.package }}" \
+            ".#packages.x86_64-linux.mypkgs.assets" \
+            ".#packages.x86_64-linux.mypkgs.opencode-claude-max-proxy" \
+            ".#packages.x86_64-linux.mypkgs.satty-shot" \
+            ".#packages.x86_64-linux.mypkgs.xwechat" \
             --no-link \
             --print-build-logs
 
