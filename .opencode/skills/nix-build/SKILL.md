@@ -29,3 +29,30 @@ nix build .#nixosConfigurations.hasty-desktop.config.system.build.toplevel
 ```
 
 Replace `hasty-desktop` with `vmware-desktop` to check the other host.
+
+## Troubleshooting
+
+### Home Manager activation fails
+
+If `nh os switch` or `nh os test` fails with `home-manager-<user>.service`, inspect:
+
+```bash
+systemctl status home-manager-<user>.service --no-pager
+journalctl -u home-manager-<user>.service -n 200 --no-pager
+```
+
+Common failure pattern:
+
+- `Existing file '...' would be clobbered`
+
+This means Home Manager wants to manage a file, but a normal file already
+exists at that path. Fix it by moving or removing the conflicting file, then
+retry the switch/test. Example:
+
+```bash
+mv ~/.claude/settings.json ~/.claude/settings.json.bak
+nh os switch .#hasty-desktop
+```
+
+If you want this to be automatic in the future, consider configuring
+`home-manager.backupFileExtension` or `home-manager.backupCommand`.
