@@ -60,10 +60,24 @@ jobs:
   # Fast gate: evaluates all flake outputs and validates their structure.
   # Catches syntax errors, missing imports, and option type mismatches in seconds.
   # Skipped for documentation-only changes (no Nix files touched).
+  fmt:
+    name: Check nix fmt
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v15
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Run formatter
+        run: nix fmt
+      - name: Verify formatting is clean
+        run: git diff --exit-code
+
   check:
     name: Evaluate & check flake
     runs-on: ubuntu-latest
-    needs: detect-changes
+    needs: [detect-changes, fmt]
     if: needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
