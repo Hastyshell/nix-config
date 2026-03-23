@@ -5,6 +5,11 @@ on:
     branches:
       - main
   pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
   workflow_dispatch:
     inputs:
       build-packages:
@@ -16,12 +21,9 @@ on:
         type: boolean
         default: false
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   # Detects which categories of files changed.
@@ -29,17 +31,49 @@ jobs:
   # - nix:      any Nix-related file (.nix, flake.lock, hosts/, modules/, pkgs/, …)
   # - lockfile: flake.lock specifically (triggers full rebuild)
   # - packages: pkgs/ or flake.nix (custom package derivations)
+  # - should-run: whether CI should continue for this event
   # When none of these match (e.g. docs-only change), all downstream jobs are skipped.
   detect-changes:
     name: Detect changed files
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}-detect-changes
+      cancel-in-progress: true
     outputs:
+      should-run: ${{ steps.event-gate.outputs.should-run }}
       nix: ${{ steps.filter.outputs.nix }}
       lockfile: ${{ steps.filter.outputs.lockfile }}
       packages: ${{ steps.filter.outputs.packages }}
     steps:
+      - name: Decide whether CI should continue
+        id: event-gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          should_run=true
+
+          if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.draft }}" = "true" ]; then
+            echo "Skipping draft pull request"
+            should_run=false
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            merged_prs=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
+              --jq '[.[] | select(.merged_at != null)] | length')
+
+            if [ "$merged_prs" -gt 0 ]; then
+              echo "Skipping main push triggered by merged pull request"
+              should_run=false
+            fi
+          fi
+
+          echo "should-run=$should_run" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
+        if: steps.event-gate.outputs.should-run == 'true'
+
       - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        if: steps.event-gate.outputs.should-run == 'true'
         id: filter
         with:
           filters: |
@@ -64,7 +98,12 @@ jobs:
     name: Check nix fmt
     runs-on: ubuntu-latest
     needs: detect-changes
-    if: needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch'
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}-fmt
+      cancel-in-progress: true
+    if: >-
+      needs.detect-changes.outputs.should-run == 'true' &&
+      (needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch')
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v15
@@ -78,7 +117,12 @@ jobs:
     name: Evaluate & check flake
     runs-on: ubuntu-latest
     needs: [detect-changes, fmt]
-    if: needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch'
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}-check
+      cancel-in-progress: true
+    if: >-
+      needs.detect-changes.outputs.should-run == 'true' &&
+      (needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch')
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v15
@@ -95,8 +139,12 @@ jobs:
     name: Evaluate NixOS
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}-eval-nixos
+      cancel-in-progress: true
     if: >-
       !cancelled() && !failure() &&
+      needs.detect-changes.outputs.should-run == 'true' &&
       (needs.detect-changes.outputs.nix == 'true' || github.event_name == 'workflow_dispatch')
     steps:
       - uses: actions/checkout@v4
@@ -117,8 +165,12 @@ jobs:
     name: Build packages
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}-build-packages
+      cancel-in-progress: true
     if: >-
       !cancelled() && !failure() &&
+      needs.detect-changes.outputs.should-run == 'true' &&
       (needs.detect-changes.outputs.packages == 'true' && needs.detect-changes.outputs.lockfile != 'true'
       || github.event_name == 'workflow_dispatch' && inputs.build-packages)
     steps:
@@ -143,8 +195,12 @@ jobs:
     name: Build NixOS
     runs-on: ubuntu-latest
     needs: [detect-changes, check]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref_name }}-build-nixos
+      cancel-in-progress: true
     if: >-
       !cancelled() && !failure() &&
+      needs.detect-changes.outputs.should-run == 'true' &&
       (needs.detect-changes.outputs.lockfile == 'true'
       || github.event_name == 'workflow_dispatch' && inputs.build-nixos)
     steps:
