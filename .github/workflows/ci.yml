@@ -23,7 +23,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   # Detects which categories of files changed.
@@ -47,24 +46,12 @@ jobs:
     steps:
       - name: Decide whether CI should continue
         id: event-gate
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           should_run=true
 
           if [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.event.pull_request.draft }}" = "true" ]; then
             echo "Skipping draft pull request"
             should_run=false
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            merged_prs=$(gh api \
-              -H "Accept: application/vnd.github+json" \
-              "/repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
-              --jq '[.[] | select(.merged_at != null)] | length')
-
-            if [ "$merged_prs" -gt 0 ]; then
-              echo "Skipping main push triggered by merged pull request"
-              should_run=false
-            fi
           fi
 
           echo "should-run=$should_run" >> "$GITHUB_OUTPUT"
