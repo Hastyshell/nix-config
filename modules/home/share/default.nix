@@ -10,6 +10,7 @@
     ./direnv.nix
     ./opencode
     ./claude.nix
+    ./sops.nix
   ];
 
   xresources.properties = {
