@@ -12,7 +12,10 @@
     ./obs.nix
     ./gtk.nix
     ./pkgs.nix
-    ./extra
+    ./niri.nix
+    ./swayidle.nix
+    ./walker
+    ./waybar
   ];
 
   home.sessionVariables = {

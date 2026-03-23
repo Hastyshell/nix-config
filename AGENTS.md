@@ -9,8 +9,15 @@ Two hosts: `hasty-desktop`, `vmware-desktop`. Home Manager as NixOS module.
 flake.nix          # Entrypoint: inputs, perSystem config, formatter
 hosts/nixos/       # Per-machine host definitions (<hostname>/)
 modules/
-  system/          # NixOS modules (share/ = cross-platform, nixos/ = NixOS-specific)
-  home/            # Home Manager modules (share/ = CLI, gui/linux/ = desktop)
+  home/            # Home Manager modules
+    common/        #   Cross-platform CLI/shell tools (included in homeModules.default)
+    linux/         #   Linux-specific HM modules
+      desktop/     #     Desktop environment (homeModules.linux.desktop)
+  system/          # NixOS / system modules
+    common/        #   Cross-platform system config (included in nixosModules.default)
+    nixos/         #   NixOS-specific modules
+      common/      #     Base NixOS config (included in nixosModules.default)
+      desktop/     #     Desktop system config (nixosModules.desktop)
 options/           # Centralized custom option declarations (options/default.nix)
 overlays/          # Nixpkgs overlays (unstable, niri, NUR)
 pkgs/              # Custom package derivations (internal pkgs.mypkgs.*, flat flake packages.* outputs)
