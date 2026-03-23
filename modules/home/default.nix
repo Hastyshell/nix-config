@@ -1,9 +1,12 @@
 {
   flake.homeModules = {
-    default = import ./share;
-    gui = {
-      linux = import ./gui/linux;
-      # darwin = import ./gui/darwin;
+    default = import ./common;
+    linux = {
+      desktop = import ./linux/desktop;
+      # server = import ./linux/server;
     };
+    # darwin = {
+    #   desktop = import ./darwin/desktop;
+    # };
   };
 }
