@@ -14,7 +14,7 @@
     self.customOptions
     ./home.nix
     self.homeModules.default
-    self.homeModules.gui.linux
+    self.homeModules.linux.desktop
   ];
   globalOptions = {
     custom.nixos.secureBoot.lanzaboote.enable = true;

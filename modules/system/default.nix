@@ -3,12 +3,19 @@
     nixosModules = {
       default = {
         imports = [
-          ./nixos
-          ./share
+          ./common
+          ./nixos/common
         ];
       };
       desktop = import ./nixos/desktop;
     };
-    # darwinModules = import ./darwin // import ./share;
+    # darwinModules = {
+    #   default = {
+    #     imports = [
+    #       ./common
+    #       ./darwin/common
+    #     ];
+    #   };
+    # };
   };
 }
