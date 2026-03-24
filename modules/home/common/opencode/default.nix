@@ -55,17 +55,17 @@ in
     };
   };
 
-  # Persistent OpenCode server for the Web UI, accessible on the LAN via mDNS.
+  # Persistent OpenCode server for the Web UI.
   # Depends on claude-max-proxy so the proxy is always up before opencode serve starts.
   systemd.user.services.opencode-serve = {
     Unit = {
-      Description = "OpenCode server (Web UI + LAN mDNS)";
+      Description = "OpenCode server (Web UI)";
       After = [ "claude-max-proxy.service" ];
       Requires = [ "claude-max-proxy.service" ];
     };
 
     Service = {
-      ExecStart = "${pkgs.unstable.opencode}/bin/opencode serve --port ${toString servePort} --hostname ${serveHost} --mdns";
+      ExecStart = "${pkgs.unstable.opencode}/bin/opencode serve --port ${toString servePort} --hostname ${serveHost}";
       Environment = [
         "ANTHROPIC_API_KEY=dummy"
         "ANTHROPIC_BASE_URL=${proxyBaseUrl}"
