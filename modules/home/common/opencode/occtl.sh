@@ -243,7 +243,6 @@ print_serve_details() {
 
   if curl --silent --output /dev/null --connect-timeout 1 --max-time 2 "$base_url/" 2>/dev/null; then
     printf 'serve-http: reachable at %s\n' "$base_url"
-    printf 'serve-mdns: %s:%s\n' "$DEFAULT_SERVE_MDNS_DOMAIN" "$DEFAULT_SERVE_PORT"
   else
     printf 'serve-http: unreachable at %s\n' "$base_url"
     exit_code=1
