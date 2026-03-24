@@ -7,5 +7,6 @@
   system = "x86_64-linux";
   homeModules = [
     self.homeModules.default
+    { home.sessionVariables.PATH = "$HOME/.nix-profile/bin:$PATH"; }
   ];
 }
