@@ -81,9 +81,14 @@ Manager modules, so `custom.linux.desktop.*` flags work across both layers.
 
 ### Host Configuration
 
-Hosts use a `mkHost` factory in `hosts/nixos/default.nix`. Each host directory
+NixOS hosts use a `mkHost` factory in `hosts/nixos/default.nix`. Each host directory
 has `default.nix` (host record: username, modules, homeModules, globalOptions),
 `configuration.nix`, `hardware-configuration.nix` (auto-generated), `home.nix`.
+
+Standalone Home Manager hosts use a `mkHome` factory in `hosts/home/default.nix`.
+Each host directory has a single `default.nix` (host record: hostname, username,
+fullName, email, homeModules). These produce `homeConfigurations` flake outputs
+for use on non-NixOS machines.
 
 ### Module Placement Guide
 

@@ -1,13 +1,16 @@
 # AGENTS.md
 
 Personal NixOS + Home Manager flake config (**flake-parts**, `x86_64-linux`).
-Two hosts: `hasty-desktop`, `vmware-desktop`. Home Manager as NixOS module.
+NixOS hosts: `hasty-desktop`, `vmware-desktop` (Home Manager as NixOS module).
+Standalone Home Manager hosts: `hasty-earningd` (non-NixOS, `homeConfigurations` output).
 
 ## Repository Layout
 
 ```
 flake.nix          # Entrypoint: inputs, perSystem config, formatter
-hosts/nixos/       # Per-machine host definitions (<hostname>/)
+hosts/
+  nixos/           # NixOS host definitions (<hostname>/)
+  home/            # Standalone Home Manager host definitions (<hostname>/)
 modules/
   home/            # Home Manager modules
     common/        #   Cross-platform CLI/shell tools (included in homeModules.default)
