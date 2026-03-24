@@ -6,8 +6,13 @@ description: Build, apply, test, and lint commands for this NixOS flake — nh, 
 ## Build / Apply
 
 ```bash
+# NixOS hosts
 nh os switch . #hostname          # apply configuration to current host
 nh os test . #hostname            # test without making it the boot default
+
+# Standalone Home Manager hosts (non-NixOS)
+nh home switch . #hostname        # apply home configuration
+
 nix fmt                           # format all Nix files (nixfmt-rfc-style)
 statix check .                    # lint and suggestions
 deadnix .                         # find unused bindings
@@ -20,15 +25,22 @@ nix flake update <input-name>     # update a single input
 No automated tests or flake checks. Verify by building:
 
 ```bash
-# Quick evaluation check (no download/build)
+# NixOS hosts — quick evaluation check (no download/build)
 nix eval .#nixosConfigurations.hasty-desktop.config.system.build.toplevel --no-build
-# Full build check (dry-run)
+# NixOS hosts — full build check (dry-run)
 nix build .#nixosConfigurations.hasty-desktop.config.system.build.toplevel --dry-run
-# Build without applying
+# NixOS hosts — build without applying
 nix build .#nixosConfigurations.hasty-desktop.config.system.build.toplevel
 ```
 
-Replace `hasty-desktop` with `vmware-desktop` to check the other host.
+Replace `hasty-desktop` with `vmware-desktop` to check the other NixOS host.
+
+```bash
+# Standalone Home Manager hosts — evaluation check
+nix eval .#homeConfigurations.hasty-earningd.activationPackage --no-build
+# Standalone Home Manager hosts — build check
+nix build .#homeConfigurations.hasty-earningd.activationPackage
+```
 
 ## Troubleshooting
 

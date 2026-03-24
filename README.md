@@ -34,6 +34,8 @@ Personal Nix flake for my Linux desktops (with room for macOS later). It keeps s
 ## Repo layout
 - `flake.nix`: Entrypoint using `flake-parts`, overlays, and a custom package set exposed internally as `pkgs.mypkgs.*` and externally as flat flake `packages.*` outputs.
 - `hosts/`: Per-machine definitions combining system modules + home-manager modules and user metadata.
+  - `nixos/`: NixOS system hosts (full system management).
+  - `home/`: Standalone Home Manager hosts for machines without NixOS system-level control.
 - `modules/`: Reusable building blocks
   - `system/`: NixOS modules (desktop, peripherals, stylix, secure boot, graphics, etc.)
   - `home/`: Home Manager modules (shell, editor, terminal, Wayland apps, theming)
@@ -42,8 +44,13 @@ Personal Nix flake for my Linux desktops (with room for macOS later). It keeps s
 - `pkgs/`: Custom packages and assets.
 
 ## Host profiles
+
+### NixOS hosts (`nixosConfigurations`)
 - `hasty-desktop`: Daily driver with NVIDIA, secure boot via lanzaboote, greetd + niri session, waybar, walker, Thunar, Sunshine for remote desktop.
 - `vmware-desktop`: VM-oriented variant sharing the same Wayland stack (niri + walker + waybar + greetd + Thunar + Sunshine) without the NVIDIA/secure-boot bits.
+
+### Standalone Home Manager hosts (`homeConfigurations`)
+- `hasty-earningd`: Work dev server (non-NixOS). Manages only the user environment via standalone Home Manager.
 
 ## Desktop & user stack
 - **WM/session**: Niri from `niri-flake`, Wayland-first environment variables baked in.
@@ -68,14 +75,19 @@ See `options/default.nix` for feature switches like `custom.linux.desktop.wm.nir
 Prereqs: flakes enabled, `nh` installed (e.g., `nix profile install nixpkgs#nh`). Run from the repo root:
 
 ```bash
-# Switch a host
+# Switch a NixOS host
 nh os switch . #hostname
 
-# Dry-run/test
+# Dry-run/test a NixOS host
 nh os test . #hostname
+
+# Switch a standalone Home Manager host
+nh home switch . #hostname
 ```
 
-For new machines, clone the repo, pick/create a host under `hosts/nixos/`, adjust feature flags in `globalOptions`, then run `nh os switch` with the matching `.#hostname`.
+For new NixOS machines, clone the repo, pick/create a host under `hosts/nixos/`, adjust feature flags in `globalOptions`, then run `nh os switch` with the matching `.#hostname`.
+
+For new standalone Home Manager machines (non-NixOS), create a host under `hosts/home/`, then run `nh home switch` with the matching `.#hostname`.
 
 ## Acknowledgements
 - [ryan4yin/nix-config](https://github.com/ryan4yin/nix-config): many configurations were adapted from here.
