@@ -8,6 +8,9 @@
       xz
       zstd
       lz4
+      p7zip
+      unzip
+      unrar
 
       fd
       # Text Processing

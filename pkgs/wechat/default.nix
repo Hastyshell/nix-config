@@ -83,7 +83,7 @@ appimageTools.wrapAppImage {
     Name=wechat
     Terminal=false
     Type=Application
-    Version=4.0.13
+    Version=4.1.1.14
     EOF
   '';
 
