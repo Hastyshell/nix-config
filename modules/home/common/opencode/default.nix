@@ -1,7 +1,7 @@
 { pkgs, ... }:
 let
+  opencode = pkgs.unstable.opencode;
   claude-max-proxy = pkgs.mypkgs.opencode-claude-max-proxy;
-  mdnsDomain = "opencode.local";
   serveHost = "0.0.0.0";
   servePort = 8964;
   proxyHost = "127.0.0.1";
@@ -23,13 +23,11 @@ let
           "@proxyHost@"
           "@proxyPort@"
           "@servePort@"
-          "@mdnsDomain@"
         ]
         [
           proxyHost
           (toString proxyPort)
           (toString servePort)
-          mdnsDomain
         ]
         (builtins.readFile ./occtl.sh);
   };
@@ -43,15 +41,12 @@ in
 
   programs.opencode = {
     enable = true;
-    package = pkgs.unstable.opencode;
+    package = opencode;
     settings = {
       theme = "tokyonight";
       plugin = [
         "${claude-max-proxy}/share/opencode-claude-max-proxy/src/plugin/claude-max-headers.ts"
       ];
-      server = {
-        mdnsDomain = mdnsDomain;
-      };
     };
   };
 
@@ -65,7 +60,7 @@ in
     };
 
     Service = {
-      ExecStart = "${pkgs.unstable.opencode}/bin/opencode serve --port ${toString servePort} --hostname ${serveHost}";
+      ExecStart = "${opencode}/bin/opencode serve --port ${toString servePort} --hostname ${serveHost}";
       Environment = [
         "ANTHROPIC_API_KEY=dummy"
         "ANTHROPIC_BASE_URL=${proxyBaseUrl}"
