@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  inherit (pkgs.unstable) opencode;
+  inherit (pkgs) opencode;
   serveHost = "0.0.0.0";
   servePort = 8964;
 in

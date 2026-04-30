@@ -34,6 +34,8 @@
       flake = false;
     };
 
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
     niri = {
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
