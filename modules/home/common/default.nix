@@ -8,6 +8,7 @@
     ./fzf.nix
     ./git.nix
     ./direnv.nix
+    ./pi
     ./opencode
     ./claude.nix
   ];

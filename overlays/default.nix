@@ -26,6 +26,7 @@ let
       inherit (inputs.llm-agents.packages.${final.stdenv.hostPlatform.system})
         claude-code
         opencode
+        pi
         ;
     };
 

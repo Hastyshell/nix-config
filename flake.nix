@@ -34,6 +34,11 @@
       flake = false;
     };
 
+    pi-config = {
+      url = "github:Hastyshell/pi-config";
+      flake = false;
+    };
+
     llm-agents.url = "github:numtide/llm-agents.nix";
 
     niri = {
