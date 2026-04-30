@@ -168,7 +168,6 @@ jobs:
         run: |
           nix build \
             ".#packages.x86_64-linux.assets" \
-            ".#packages.x86_64-linux.opencode-claude-max-proxy" \
             ".#packages.x86_64-linux.satty-shot" \
             ".#packages.x86_64-linux.xwechat" \
             --no-link \
