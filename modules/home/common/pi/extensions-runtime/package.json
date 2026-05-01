@@ -1,0 +1,9 @@
+{
+  "name": "pi-config-extensions-runtime-deps",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "diff": "8.0.2",
+    "typebox": "1.1.24"
+  }
+}
