@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   pkgs,
@@ -6,6 +7,7 @@
 }:
 let
   piConfig = inputs.pi-config;
+  piAgentDir = "${config.home.homeDirectory}/.pi/agent";
 
   piExtensions = pkgs.buildNpmPackage {
     pname = "pi-config-extensions";
@@ -18,7 +20,7 @@ let
       cp ${./extensions-runtime/package.json} package.json
     '';
 
-    npmDepsHash = "sha256-GfS4JgphPDlpp1pb5noGgLUAmno+qwjPQQ0ewXV0++Y=";
+    npmDepsHash = "sha256-QQ7H/1bqTCJolZgCVLd1OXj0FWecAL8373244m4gtpo=";
     dontNpmBuild = true;
 
     installPhase = ''
@@ -62,12 +64,12 @@ in
     };
   };
 
-  home.activation.removeMutablePiAgentResources = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
-    rm -rf \
-      "$HOME/.pi/agent/skills" \
-      "$HOME/.pi/agent/prompts" \
-      "$HOME/.pi/agent/extensions" \
-      "$HOME/.pi/agent/themes"
+  home.activation.removeMutablePiAgentResources = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+    run rm -rf \
+      "${piAgentDir}/skills" \
+      "${piAgentDir}/prompts" \
+      "${piAgentDir}/extensions" \
+      "${piAgentDir}/themes"
   '';
 
   home.sessionVariables = {

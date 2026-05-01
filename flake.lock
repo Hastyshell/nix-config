@@ -633,11 +633,11 @@
     "pi-config": {
       "flake": false,
       "locked": {
-        "lastModified": 1777613963,
-        "narHash": "sha256-fL+a6gcfVOCHqBd8V2JE/pclJy10OQ2GYedA3lhR4O0=",
+        "lastModified": 1777627048,
+        "narHash": "sha256-2tn9bhqA5AY2t2Z4GqtrgmlCEVXShrSDGO4nuA8WK6Y=",
         "owner": "Hastyshell",
         "repo": "pi-config",
-        "rev": "845502b8683755984020e2d4fbbadd14e1ca2e4a",
+        "rev": "6c4c655c357750f8cd862f5fb154351eb0d9afdd",
         "type": "github"
       },
       "original": {
