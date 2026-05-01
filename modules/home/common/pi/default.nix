@@ -4,7 +4,12 @@
   ...
 }:
 {
-  home.packages = [ pkgs.pi ];
+  home.packages = with pkgs; [
+    pi
+    bat
+    delta
+    glow
+  ];
 
   home.file = {
     ".pi/agent/settings.json".source = "${inputs.pi-config}/settings.json";
