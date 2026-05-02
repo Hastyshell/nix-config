@@ -23,6 +23,8 @@
       # required by most wayland compositors!
       modesetting.enable = true;
       powerManagement.enable = true;
+
+      dynamicBoost.enable = true;
     };
 
     hardware.nvidia-container-toolkit.enable = true;
