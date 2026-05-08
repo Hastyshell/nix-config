@@ -23,7 +23,7 @@ let
     pname = "pi-multi-edit";
     version = "0.0.0";
 
-    src = "${piExtensionsDir}/multi-edit";
+    src = piConfig + "/extensions/multi-edit";
 
     npmDepsHash = "sha256-ob6mYY8+0GCWp+1zMp3m7qs1WYP+qZ0YunA3Bk5W/oc=";
     dontNpmBuild = true;
@@ -31,7 +31,7 @@ let
     installPhase = ''
       runHook preInstall
       mkdir -p $out
-      cp index.ts $out/
+      cp -r . $out/
       cp -r node_modules $out/
       runHook postInstall
     '';
@@ -41,7 +41,7 @@ let
     pname = "pi-web-access";
     version = "0.10.6";
 
-    src = "${piConfig}/extensions/pi-web-access";
+    src = piConfig + "/extensions/pi-web-access";
 
     npmDepsHash = "sha256-zau3eaJoa8pE3A5COXwyTLSesoePgYqrnRCg3SMSarw=";
     dontNpmBuild = true;
@@ -59,7 +59,7 @@ let
     pname = "pi-files-widget";
     version = "0.1.20";
 
-    src = "${piConfig}/extensions/files-widget";
+    src = piConfig + "/extensions/files-widget";
 
     installPhase = ''
       runHook preInstall
