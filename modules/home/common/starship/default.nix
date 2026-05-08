@@ -20,6 +20,7 @@
           symbols = {
             NixOS = "  ";
             Macos = "  ";
+            CentOS = "  ";
           };
         };
       }
