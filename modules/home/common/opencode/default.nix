@@ -14,21 +14,21 @@ in
   };
 
   # Persistent OpenCode server for the Web UI.
-  systemd.user.services.opencode-serve = {
-    Unit = {
-      Description = "OpenCode server (Web UI)";
-    };
-
-    Service = {
-      ExecStart = "${opencode}/bin/opencode serve --port ${toString servePort} --hostname ${serveHost}";
-      Type = "simple";
-      Restart = "on-failure";
-      RestartSec = 5;
-      WorkingDirectory = "%h";
-    };
-
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
+  # systemd.user.services.opencode-serve = {
+  #   Unit = {
+  #     Description = "OpenCode server (Web UI)";
+  #   };
+  #
+  #   Service = {
+  #     ExecStart = "${opencode}/bin/opencode serve --port ${toString servePort} --hostname ${serveHost}";
+  #     Type = "simple";
+  #     Restart = "on-failure";
+  #     RestartSec = 5;
+  #     WorkingDirectory = "%h";
+  #   };
+  #
+  #   Install = {
+  #     WantedBy = [ "default.target" ];
+  #   };
+  # };
 }
