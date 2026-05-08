@@ -9,6 +9,7 @@
     swww
     file-roller
     wtype
+    wl-clipboard
 
     mypkgs.xwechat
     mypkgs.satty-shot
