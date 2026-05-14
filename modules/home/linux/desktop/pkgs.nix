@@ -10,6 +10,7 @@
     file-roller
     wtype
     wl-clipboard
+    localsend
 
     mypkgs.xwechat
     mypkgs.satty-shot
