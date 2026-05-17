@@ -55,16 +55,14 @@ appimageTools.wrapAppImage {
 
   src = appimageContents;
 
-  # nativeBuildInputs = [ makeWrapper ];
-
-  # note:
-  # It is vital to exec wechat with command
-  # sh -c "${pname} > /tmp/wechat.log 2>&1"
-  # since wechat seems to need a stdout/stderr
-  # otherwise it cannot start with app launcher
-  # properly, or can only run with Terminal=true.
-  # It sucks!
   extraInstallCommands = ''
+    mv "$out/bin/${pname}" "$out/bin/.${pname}-bwrap"
+    cat > "$out/bin/${pname}" <<EOF
+    #!${stdenvNoCC.shell}
+    "$out/bin/.${pname}-bwrap" "\$@"
+    EOF
+    chmod +x "$out/bin/${pname}"
+
     # wrapProgram $out/bin/${pname} \
     #    --set GTK_IM_MODULE "fcitx" \
     #    --set QT_IM_MODULE "fcitx" \
@@ -78,7 +76,7 @@ appimageTools.wrapAppImage {
 
     cat > $out/share/applications/${pname}.desktop <<EOF
     [Desktop Entry]
-    Exec=sh -c "${pname} > /tmp/wechat.log 2>&1"
+    Exec=${pname}
     Icon=wechat
     Name=wechat
     Terminal=false

@@ -46,15 +46,23 @@ appimageTools.wrapType2 {
     ;
 
   extraInstallCommands = ''
+    mv "$out/bin/${pname}" "$out/bin/.${pname}-bwrap"
+    cat > "$out/bin/${pname}" <<EOF
+    #!${stdenvNoCC.shell}
+    "$out/bin/.${pname}-bwrap" "\$@"
+    EOF
+    chmod +x "$out/bin/${pname}"
+
     install -m 444 -D ${icon} $out/share/icons/hicolor/512x512/apps/${pname}.png
     install -m 444 -D /dev/stdin $out/share/applications/${pname}.desktop <<EOF
     [Desktop Entry]
     Name=Codex
     Comment=Codex desktop app
-    Exec=${pname}
+    Exec=${pname} --no-sandbox %U
     Icon=${pname}
     Terminal=false
     Type=Application
+    StartupWMClass=Codex
     Categories=Development;
     EOF
   '';
