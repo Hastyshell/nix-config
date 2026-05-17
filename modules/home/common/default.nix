@@ -10,6 +10,7 @@
     ./direnv.nix
     ./pi.nix
     ./opencode
+    ./codex.nix
     ./claude.nix
   ];
 
