@@ -14,6 +14,7 @@
     ./pkgs.nix
     ./niri.nix
     ./swayidle.nix
+    ./vscode.nix
     ./walker
     ./waybar
   ];
