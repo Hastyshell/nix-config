@@ -38,7 +38,12 @@ let
   inherit (sources.${system} or (throw "Unsupported system: ${system}")) src icon;
 in
 appimageTools.wrapType2 {
-  inherit pname version src meta;
+  inherit
+    pname
+    version
+    src
+    meta
+    ;
 
   extraInstallCommands = ''
     install -m 444 -D ${icon} $out/share/icons/hicolor/512x512/apps/${pname}.png

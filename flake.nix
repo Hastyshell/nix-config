@@ -92,6 +92,14 @@
           };
 
           formatter = pkgs.nixfmt-tree;
+          devShells.default = pkgs.mkShellNoCC {
+            packages = with pkgs; [
+              nixd
+              nixfmt-rfc-style
+              statix
+              deadnix
+            ];
+          };
           packages = import ./pkgs { inherit pkgs; };
         };
     };
