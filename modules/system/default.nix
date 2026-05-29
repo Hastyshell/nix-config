@@ -9,13 +9,8 @@
       };
       desktop = import ./nixos/desktop;
     };
-    # darwinModules = {
-    #   default = {
-    #     imports = [
-    #       ./common
-    #       ./darwin/common
-    #     ];
-    #   };
-    # };
+    darwinModules = {
+      default = import ./darwin/common;
+    };
   };
 }

@@ -1,11 +1,10 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   inherit (pkgs) codex;
 in
-{
-  home.packages = with pkgs; [
+lib.mkIf pkgs.stdenv.isLinux {
+  home.packages = [
     codex
-    mypkgs.codex-desktop-app
   ];
 
   home.sessionVariables = {

@@ -12,6 +12,7 @@
     wl-clipboard
     localsend
 
+    mypkgs.codex-desktop-app
     mypkgs.xwechat
     mypkgs.satty-shot
     feishu

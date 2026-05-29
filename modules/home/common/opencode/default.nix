@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 let
   inherit (pkgs) opencode;
   serveHost = "0.0.0.0";
   servePort = 8964;
 in
-{
+lib.mkIf pkgs.stdenv.isLinux {
   programs.opencode = {
     enable = true;
     package = opencode;

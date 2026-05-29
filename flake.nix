@@ -57,6 +57,25 @@
       url = "github:nix-community/stylix/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    mac-app-util.url = "github:hraban/mac-app-util";
+
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
   };
 
   outputs =
@@ -100,7 +119,9 @@
               deadnix
             ];
           };
-          packages = import ./pkgs { inherit pkgs; };
+          packages = import ./pkgs { inherit pkgs; } // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+            darwin-rebuild = inputs.nix-darwin.packages.${system}.darwin-rebuild;
+          };
         };
     };
 }

@@ -82,7 +82,7 @@ let
         themes = [ "${piConfig}/themes" ];
       };
 in
-{
+lib.mkIf pkgs.stdenv.isLinux {
   home.packages = with pkgs; [
     pi
     bat

@@ -5,8 +5,8 @@
       desktop = import ./linux/desktop;
       # server = import ./linux/server;
     };
-    # darwin = {
-    #   desktop = import ./darwin/desktop;
-    # };
+    darwin = {
+      desktop = import ./darwin/desktop;
+    };
   };
 }

@@ -1,3 +1,4 @@
+{ lib, pkgs, ... }:
 {
   imports = [
     ./pkgs.nix
@@ -14,7 +15,7 @@
     ./claude.nix
   ];
 
-  xresources.properties = {
+  xresources.properties = lib.mkIf pkgs.stdenv.isLinux {
     "Xcursor.size" = 32;
     "Xft.dpi" = 192;
   };
