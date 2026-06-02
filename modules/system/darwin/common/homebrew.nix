@@ -32,6 +32,8 @@ in
       "stats"
       "tailscale-app"
       "visual-studio-code"
+      "baidunetdisk"
+      "wechat"
     ];
     masApps = { };
   };
