@@ -11,7 +11,8 @@ in
 
   system.defaults = {
     dock = {
-      autohide = false;
+      autohide = true;
+      orientation = "bottom";
       show-recents = false;
     };
 
@@ -45,6 +46,10 @@ in
 
     screencapture = {
       location = "${homeDirectory}/Pictures";
+    };
+
+    trackpad = {
+      Clicking = true;
     };
   };
 
