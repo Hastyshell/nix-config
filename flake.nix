@@ -119,9 +119,11 @@
               deadnix
             ];
           };
-          packages = import ./pkgs { inherit pkgs; } // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
-            darwin-rebuild = inputs.nix-darwin.packages.${system}.darwin-rebuild;
-          };
+          packages =
+            import ./pkgs { inherit pkgs; }
+            // pkgs.lib.optionalAttrs pkgs.stdenv.isDarwin {
+              darwin-rebuild = inputs.nix-darwin.packages.${system}.darwin-rebuild;
+            };
         };
     };
 }
