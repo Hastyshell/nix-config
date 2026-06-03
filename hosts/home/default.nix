@@ -39,6 +39,7 @@ let
     };
   homes = [
     (import ./hasty-earningd { inherit self; })
+    (import ./hasty-dev-server { inherit self; })
   ];
 in
 {
