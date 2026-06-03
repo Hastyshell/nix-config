@@ -2,6 +2,7 @@
 {
   hostname = "hasty-earningd";
   username = "tangsiyang";
+  homeDirectory = "/mnt/disk1/tangsiyang";
   fullName = "Siyang Tang";
   email = "tangsiyang@selectdb.com";
   system = "x86_64-linux";

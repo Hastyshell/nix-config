@@ -10,6 +10,7 @@ let
     {
       hostname,
       username,
+      homeDirectory,
       fullName,
       email,
       system ? "x86_64-linux",
@@ -25,8 +26,7 @@ let
           modules = homeModules ++ [
             {
               home = {
-                inherit username stateVersion;
-                homeDirectory = "/mnt/disk1/${username}";
+                inherit username homeDirectory stateVersion;
               };
               programs.git.settings.user = {
                 name = fullName;

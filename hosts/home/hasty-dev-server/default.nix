@@ -2,6 +2,7 @@
 {
   hostname = "hasty-dev-server";
   username = "hastyshell";
+  homeDirectory = "/mnt/data/hastyshell";
   fullName = "Hastyshell";
   email = "tangsiyang2001@gmail";
   system = "x86_64-linux";
