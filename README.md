@@ -54,6 +54,7 @@ Personal Nix flake for my Linux desktops, standalone Home Manager hosts, and mac
 
 ### Standalone Home Manager hosts (`homeConfigurations`)
 - `hasty-earningd`: Work dev server (non-NixOS). Manages only the user environment via standalone Home Manager.
+- `hasty-dev-server`: Alibaba Cloud Linux dev server managed via standalone Home Manager.
 
 ### macOS hosts (`darwinConfigurations`)
 - `hasty-mba`: MacBook setup using nix-darwin, Home Manager, nix-homebrew, Homebrew casks, macOS defaults, and Darwin-specific font/app modules.
@@ -77,8 +78,17 @@ Neovim is enabled via Home Manager and sources my external config (`inputs.nvim-
 ## Custom options
 See `options/default.nix` for feature switches like `custom.linux.desktop.wm.niri.enable`, `custom.linux.desktop.bar.waybar.enable`, `custom.nixos.graphics.nvidia.enable`, `custom.nixos.secureBoot.lanzaboote.enable`, `custom.nixos.desktop.remoteDesktop.sunshine.enable`, etc. Hosts compose these to turn features on/off per machine.
 
-## Using `nh`
-Prereqs: flakes enabled, `nh` installed (e.g., `nix profile install nixpkgs#nh`). Run from the repo root:
+## NixOS runbook
+
+Run from the repo root. For the first switch on a machine without `nh`, use `nixos-rebuild` directly:
+
+```bash
+sudo nixos-rebuild switch --flake .#hasty-desktop
+```
+
+Replace `hasty-desktop` with another NixOS host name when needed, for example `vmware-desktop`.
+
+After `nh` is available, daily operations can use:
 
 ```bash
 # Switch a NixOS host
@@ -86,14 +96,20 @@ nh os switch . #hostname
 
 # Dry-run/test a NixOS host
 nh os test . #hostname
-
-# Switch a standalone Home Manager host
-nh home switch . #hostname
 ```
 
 For new NixOS machines, clone the repo, pick/create a host under `hosts/nixos/`, adjust feature flags in `globalOptions`, then run `nh os switch` with the matching `.#hostname`.
 
-For new standalone Home Manager machines (non-NixOS), create a host under `hosts/home/`, then run `nh home switch` with the matching `.#hostname`.
+## Standalone Home Manager runbook
+
+For new standalone Home Manager machines (non-NixOS), create a host under `hosts/home/`, then activate the matching `homeConfigurations` output from the repo root:
+
+```bash
+nix --extra-experimental-features "nix-command flakes" \
+  run .#homeConfigurations.hasty-dev-server.activationPackage
+```
+
+Replace `hasty-dev-server` with another standalone host name when needed, for example `hasty-earningd`.
 
 ## macOS runbook
 

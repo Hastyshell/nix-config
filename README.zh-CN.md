@@ -58,6 +58,7 @@
 ### 独立 Home Manager 主机 (`homeConfigurations`)
 
 - `hasty-earningd`：工作开发服务器，非 NixOS，只通过独立 Home Manager 管理用户环境。
+- `hasty-dev-server`：Alibaba Cloud Linux 开发服务器，通过独立 Home Manager 管理。
 
 ### macOS 主机 (`darwinConfigurations`)
 
@@ -85,15 +86,17 @@ Neovim 由 Home Manager 启用，并直接引用外部配置 `inputs.nvim-config
 
 查看 `options/default.nix` 获取功能开关，例如 `custom.linux.desktop.wm.niri.enable`、`custom.linux.desktop.bar.waybar.enable`、`custom.nixos.graphics.nvidia.enable`、`custom.nixos.secureBoot.lanzaboote.enable`、`custom.nixos.desktop.remoteDesktop.sunshine.enable` 等。各主机通过组合这些开关来启用或关闭功能。
 
-## 使用 `nh`
+## NixOS 操作指南
 
-前置条件：启用 flakes，并安装 `nh`，例如：
+从仓库根目录运行。机器上还没有 `nh` 时，首次切换直接用 `nixos-rebuild`：
 
 ```bash
-nix profile install nixpkgs#nh
+sudo nixos-rebuild switch --flake .#hasty-desktop
 ```
 
-从仓库根目录运行：
+需要切换其他 NixOS 主机时，把 `hasty-desktop` 替换成对应主机名，例如 `vmware-desktop`。
+
+安装好 `nh` 后，日常操作可以使用：
 
 ```bash
 # 切换 NixOS 主机
@@ -101,14 +104,20 @@ nh os switch . #hostname
 
 # 测试 NixOS 主机
 nh os test . #hostname
-
-# 切换独立 Home Manager 主机
-nh home switch . #hostname
 ```
 
 新 NixOS 机器：克隆仓库，在 `hosts/nixos/` 下选择或新增主机，调整 `globalOptions`，然后用对应的 `.#hostname` 执行 `nh os switch`。
 
-新的独立 Home Manager 机器：在 `hosts/home/` 下新增主机，然后用对应的 `.#hostname` 执行 `nh home switch`。
+## 独立 Home Manager 操作指南
+
+新的独立 Home Manager 机器：在 `hosts/home/` 下新增主机，然后在仓库根目录激活对应的 `homeConfigurations` 输出：
+
+```bash
+nix --extra-experimental-features "nix-command flakes" \
+  run .#homeConfigurations.hasty-dev-server.activationPackage
+```
+
+需要切换其他独立 Home Manager 主机时，把 `hasty-dev-server` 替换成对应的主机名，例如 `hasty-earningd`。
 
 ## macOS 操作指南
 
