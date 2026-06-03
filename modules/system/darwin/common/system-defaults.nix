@@ -31,8 +31,8 @@ in
       ApplePressAndHoldEnabled = false;
       AppleShowAllExtensions = true;
       AppleShowAllFiles = true;
-      InitialKeyRepeat = 15;
-      KeyRepeat = 2;
+      InitialKeyRepeat = 10;
+      KeyRepeat = 1;
       _HIHideMenuBar = false;
       "com.apple.swipescrolldirection" = false;
     };
