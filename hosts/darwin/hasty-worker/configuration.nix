@@ -13,8 +13,6 @@
   ];
 
   homebrew.casks = [
-    "tailscale-app"
-    "baidunetdisk"
-    "wechat"
+    "wechatwork"
   ];
 }

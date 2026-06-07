@@ -85,6 +85,7 @@ let
 
   hosts = [
     (import ./hasty-mba { inherit self; })
+    (import ./hasty-worker { inherit self; })
   ];
 in
 {

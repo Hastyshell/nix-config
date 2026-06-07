@@ -5,6 +5,15 @@
 }:
 let
   username = config.system.primaryUser;
+  commonCasks = [
+    "codex-app"
+    "google-chrome"
+    "intellij-idea-ce"
+    "iterm2"
+    "maccy"
+    "stats"
+    "visual-studio-code"
+  ];
 in
 {
   imports = [
@@ -23,18 +32,7 @@ in
       "brew-cask-completion"
       "mas"
     ];
-    casks = [
-      "codex-app"
-      "google-chrome"
-      "intellij-idea-ce"
-      "iterm2"
-      "maccy"
-      "stats"
-      "tailscale-app"
-      "visual-studio-code"
-      "baidunetdisk"
-      "wechat"
-    ];
+    casks = commonCasks;
     masApps = { };
   };
 
