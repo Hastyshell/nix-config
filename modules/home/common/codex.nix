@@ -1,8 +1,8 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 let
   inherit (pkgs) codex;
 in
-lib.mkIf pkgs.stdenv.isLinux {
+{
   home.packages = [
     codex
   ];

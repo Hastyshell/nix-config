@@ -1,5 +1,5 @@
-{ lib, pkgs, ... }:
-lib.mkIf pkgs.stdenv.isLinux {
+{ pkgs, ... }:
+{
   programs.claude-code = {
     enable = true;
     package = pkgs.claude-code;
