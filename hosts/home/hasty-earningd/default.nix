@@ -1,10 +1,10 @@
 { self, ... }:
 {
   hostname = "hasty-earningd";
-  username = "tangsiyang";
-  homeDirectory = "/mnt/disk1/tangsiyang";
+  username = "hastyshell";
+  homeDirectory = "/home/hastyshell";
   fullName = "Siyang Tang";
-  email = "tangsiyang@selectdb.com";
+  email = "tangsiyang@xiaohongshu.com";
   system = "x86_64-linux";
   homeModules = [
     self.homeModules.default
