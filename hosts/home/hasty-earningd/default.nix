@@ -1,12 +1,4 @@
-{
-  self,
-  lib,
-  config,
-  ...
-}:
-let
-  npmGlobal = "${config.home.homeDirectory}/.local/share/npm-global";
-in
+{ self, ... }:
 {
   hostname = "hasty-earningd";
   username = "hastyshell";
@@ -32,7 +24,10 @@ in
       }
     )
     (
-      { pkgs, ... }:
+      { config, lib, pkgs, ... }:
+      let
+        npmGlobal = "${config.home.homeDirectory}/.local/share/npm-global";
+      in
       {
         home.packages = with pkgs; [
           maven
