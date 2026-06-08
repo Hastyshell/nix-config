@@ -1,4 +1,12 @@
-{ self, ... }:
+{
+  self,
+  lib,
+  config,
+  ...
+}:
+let
+  npmGlobal = "${config.home.homeDirectory}/.local/share/npm-global";
+in
 {
   hostname = "hasty-earningd";
   username = "hastyshell";
@@ -30,6 +38,24 @@
           maven
           nodejs
         ];
+
+        home.sessionVariables = {
+          NPM_CONFIG_PREFIX = npmGlobal;
+          npm_config_prefix = npmGlobal;
+        };
+
+        home.sessionPath = [
+          "${npmGlobal}/bin"
+        ];
+
+        home.file.".npmrc".text = ''
+          prefix=${npmGlobal}
+        '';
+
+        home.activation.createNpmGlobalPrefix = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          mkdir -p ${lib.escapeShellArg npmGlobal}/bin
+          mkdir -p ${lib.escapeShellArg npmGlobal}/lib/node_modules
+        '';
       }
     )
     (
