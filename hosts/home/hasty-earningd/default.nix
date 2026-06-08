@@ -43,13 +43,6 @@
           "${npmGlobal}/bin"
         ];
 
-        home.file.".npmrc" = {
-          force = true;
-          text = ''
-            prefix=${npmGlobal}
-          '';
-        };
-
         home.activation.createNpmGlobalPrefix = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           mkdir -p ${lib.escapeShellArg npmGlobal}/bin
           mkdir -p ${lib.escapeShellArg npmGlobal}/lib/node_modules
