@@ -57,6 +57,23 @@
     (
       { lib, ... }:
       {
+        programs.zsh.initContent = lib.mkBefore ''
+          ZSH_DISABLE_COMPFIX="true"
+        '';
+      }
+    )
+    (
+      { lib, ... }:
+      {
+        programs.zsh.initContent = lib.mkAfter ''
+          export CLASHCTL_HOME=/data/hastyshell/clashctl
+          . $CLASHCTL_HOME/scripts/cmd/clashctl.sh
+        '';
+      }
+    )
+    (
+      { lib, ... }:
+      {
         programs.zsh.initContent = lib.mkAfter ''
           _use-java() {
             local java_home="$1"
