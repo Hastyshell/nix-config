@@ -2,7 +2,7 @@
 {
   hostname = "hasty-earningd";
   username = "hastyshell";
-  homeDirectory = "/home/hastyshell";
+  homeDirectory = "/data/hastyshell";
   fullName = "Siyang Tang";
   email = "tangsiyang@xiaohongshu.com";
   system = "x86_64-linux";
@@ -24,7 +24,12 @@
       }
     )
     (
-      { config, lib, pkgs, ... }:
+      {
+        config,
+        lib,
+        pkgs,
+        ...
+      }:
       let
         npmGlobal = "${config.home.homeDirectory}/.local/share/npm-global";
       in
