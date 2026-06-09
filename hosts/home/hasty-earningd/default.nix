@@ -11,6 +11,8 @@
     (
       { pkgs, ... }:
       {
+        custom.home.codex.proxy.enable = true;
+
         home.sessionVariables = {
           PATH = "$HOME/.nix-profile/bin:$PATH";
           GIT_SSH_COMMAND = "ssh -F none";
