@@ -13,6 +13,7 @@
   ];
 
   homebrew.casks = [
+    "tencent-meeting"
     "wechatwork"
   ];
 }
