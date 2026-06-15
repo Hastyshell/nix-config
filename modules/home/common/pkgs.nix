@@ -21,6 +21,7 @@
 
       fastfetch
 
+      ossutil
       rclone
       rsync
       gh
