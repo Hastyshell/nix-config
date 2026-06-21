@@ -1,11 +1,15 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  ...
+}:
 let
   monoFont = "JetBrainsMono Nerd Font";
 in
 {
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode.fhs;
+    package = if pkgs.stdenv.isLinux then pkgs.vscode.fhs else pkgs.vscode;
 
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [

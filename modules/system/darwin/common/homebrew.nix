@@ -8,11 +8,6 @@ let
   commonCasks = [
     "codex-app"
     "google-chrome"
-    "intellij-idea-ce"
-    "iterm2"
-    "maccy"
-    "stats"
-    "visual-studio-code"
   ];
 in
 {
@@ -30,7 +25,6 @@ in
     };
     brews = [
       "brew-cask-completion"
-      "mas"
     ];
     casks = commonCasks;
     masApps = { };

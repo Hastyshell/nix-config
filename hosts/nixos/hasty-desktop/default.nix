@@ -14,6 +14,7 @@
     self.customOptions
     ./home.nix
     self.homeModules.default
+    self.homeModules.desktop
     self.homeModules.linux.desktop
   ];
   globalOptions = {
