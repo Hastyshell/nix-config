@@ -896,22 +896,6 @@
         "type": "github"
       }
     },
-    "pi-config": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1778124298,
-        "narHash": "sha256-irBwrqt4Of71iGw7KqofLQNekQ9gB6LDoDy/y67CWAY=",
-        "owner": "Hastyshell",
-        "repo": "pi-config",
-        "rev": "6d61b6e1257639a95885eae3b6fb35ca491b7871",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Hastyshell",
-        "repo": "pi-config",
-        "type": "github"
-      }
-    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -952,7 +936,6 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nur": "nur",
         "nvim-config": "nvim-config",
-        "pi-config": "pi-config",
         "stylix": "stylix",
         "walker": "walker"
       }

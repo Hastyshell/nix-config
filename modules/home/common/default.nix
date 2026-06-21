@@ -9,10 +9,7 @@
     ./fzf.nix
     ./git.nix
     ./direnv.nix
-    ./pi.nix
-    ./opencode
     ./codex.nix
-    ./claude.nix
   ];
 
   xresources.properties = lib.mkIf pkgs.stdenv.isLinux {

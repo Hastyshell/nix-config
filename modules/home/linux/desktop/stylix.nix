@@ -4,5 +4,4 @@
   stylix.targets.gnome.enable = false;
   stylix.targets.swaylock.enable = false;
   stylix.targets.waybar.enable = false;
-  stylix.targets.opencode.enable = false;
 }
