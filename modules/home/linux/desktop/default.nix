@@ -1,7 +1,6 @@
 {
   imports = [
     ./alacritty.nix
-    ./chrome.nix
     ./fcitx5.nix
     ./stylix.nix
     ./swaylock.nix

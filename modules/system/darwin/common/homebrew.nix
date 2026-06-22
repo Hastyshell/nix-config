@@ -7,7 +7,6 @@ let
   username = config.system.primaryUser;
   commonCasks = [
     "codex-app"
-    "google-chrome"
   ];
 in
 {
