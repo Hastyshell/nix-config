@@ -1,5 +1,7 @@
-{ pkgs, ... }:
+{ config, ... }:
 let
+  homeManagerApps = "${config.home.homeDirectory}/${config.targets.darwin.copyApps.directory}";
+
   openAppPath = appPath: {
     enable = true;
     config = {
@@ -11,24 +13,13 @@ let
       RunAtLoad = true;
     };
   };
-  openApp =
-    app:
-    let
-      appPath = "${app.package}/Applications/${app.name}.app";
-    in
-    openAppPath appPath;
+  openHomeManagerApp = name: openAppPath "${homeManagerApps}/${name}.app";
 in
 {
   launchd.agents = {
     clash-verge = openAppPath "/Applications/Clash Verge.app";
-    maccy = openApp {
-      package = pkgs.maccy;
-      name = "Maccy";
-    };
-    stats = openApp {
-      package = pkgs.stats;
-      name = "Stats";
-    };
+    maccy = openHomeManagerApp "Maccy";
+    stats = openHomeManagerApp "Stats";
     tailscale = openAppPath "/Applications/Tailscale.app";
   };
 }
