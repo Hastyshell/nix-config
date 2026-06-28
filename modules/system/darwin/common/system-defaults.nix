@@ -9,6 +9,7 @@ let
     "/Applications/Codex.app"
     "/Applications/Clash Verge.app"
     "${homeDirectory}/Applications/Home Manager Apps/Visual Studio Code.app"
+    "${homeDirectory}/Applications/Home Manager Apps/Obsidian.app"
     "/Applications/WeChat.app"
     "/System/Applications/Messages.app"
     "/System/Applications/Mail.app"
