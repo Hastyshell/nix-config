@@ -24,7 +24,7 @@
 
   xdg.terminal-exec = {
     enable = true;
-    package = pkgs.xdg-terminal-exec-mkhl;
+    package = pkgs.xdg-terminal-exec;
     settings =
       let
         terminals = [

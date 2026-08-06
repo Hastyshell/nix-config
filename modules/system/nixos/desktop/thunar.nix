@@ -8,7 +8,7 @@
   config = lib.mkIf config.custom.linux.desktop.fileManager.thunar.enable {
     programs.thunar = {
       enable = true;
-      plugins = with pkgs.xfce; [
+      plugins = with pkgs; [
         thunar-volman
         thunar-archive-plugin
       ];

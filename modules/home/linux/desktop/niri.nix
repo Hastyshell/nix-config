@@ -57,7 +57,7 @@ in
 
       layer-rules = [
         {
-          matches = [ { namespace = ".*swww-backdrop.*"; } ];
+          matches = [ { namespace = ".*awww-backdrop.*"; } ];
           place-within-backdrop = true;
         }
       ];
@@ -67,10 +67,10 @@ in
           sh = "kanshi";
         }
         {
-          sh = "swww-daemon -n swww-background & swww img -n swww-background --transition-type center ${wallpapers}/lakeside-sunset-pink.png";
+          sh = "awww-daemon -n awww-background & awww img -n awww-background --transition-type center ${wallpapers}/lakeside-sunset-pink.png";
         }
         {
-          sh = "swww-daemon -n swww-backdrop & swww img -n swww-backdrop --transition-type center ${wallpapers}/lakeside-sunset-dark.png";
+          sh = "awww-daemon -n awww-backdrop & awww img -n awww-backdrop --transition-type center ${wallpapers}/lakeside-sunset-dark.png";
         }
         {
           sh = "waybar";

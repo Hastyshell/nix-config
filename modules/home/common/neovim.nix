@@ -8,6 +8,8 @@
   xdg.configFile."nvim".source = inputs.nvim-config.outPath;
   programs.neovim = {
     enable = true;
+    withPython3 = true;
+    withRuby = true;
 
     # These environment variables are needed to build and run binaries
     # with external package managers like mason.nvim.
@@ -44,7 +46,7 @@
       ripgrep
 
       nixd
-      nixfmt-rfc-style
+      nixfmt
       statix # Lints and suggestions for the nix programming language
       deadnix # Find and remove unused code in .nix source files
 
@@ -70,14 +72,14 @@
       # jdt-language-server
 
       taplo # TOML language server / formatter / validator
-      nodePackages.yaml-language-server
+      yaml-language-server
       actionlint # GitHub Actions linter
       hadolint # Dockerfile linter
       marksman # language server for markdown
 
       buf # -- protocol buffer linting and formatting
       sqlfluff # sql
-      nodePackages.bash-language-server
+      bash-language-server
       shellcheck
       shfmt
       cmake-language-server

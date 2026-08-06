@@ -79,6 +79,7 @@
     userDirs = {
       enable = true;
       createDirectories = true;
+      setSessionVariables = true;
 
       desktop = "${config.home.homeDirectory}/.xdg/desktop";
       documents = "${config.home.homeDirectory}/.xdg/documents";
@@ -90,7 +91,7 @@
       videos = "${config.home.homeDirectory}/.xdg/videos";
 
       extraConfig = {
-        XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/screenshots";
+        SCREENSHOTS = "${config.xdg.userDirs.pictures}/screenshots";
       };
     };
   };

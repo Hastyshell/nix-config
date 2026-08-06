@@ -6,7 +6,7 @@
     libnotify
     papirus-icon-theme
     hicolor-icon-theme
-    swww
+    awww
     file-roller
     wtype
     wl-clipboard
