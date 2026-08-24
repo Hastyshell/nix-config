@@ -10,6 +10,7 @@
     ./git.nix
     ./direnv.nix
     ./codex.nix
+    ./node.nix
   ];
 
   xresources.properties = lib.mkIf pkgs.stdenv.isLinux {

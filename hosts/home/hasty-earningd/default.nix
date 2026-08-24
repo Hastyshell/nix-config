@@ -26,34 +26,11 @@
       }
     )
     (
-      {
-        config,
-        lib,
-        pkgs,
-        ...
-      }:
-      let
-        npmGlobal = "${config.home.homeDirectory}/.local/share/npm-global";
-      in
+      { pkgs, ... }:
       {
         home.packages = with pkgs; [
           maven
-          nodejs
         ];
-
-        home.sessionVariables = {
-          NPM_CONFIG_PREFIX = npmGlobal;
-          npm_config_prefix = npmGlobal;
-        };
-
-        home.sessionPath = [
-          "${npmGlobal}/bin"
-        ];
-
-        home.activation.createNpmGlobalPrefix = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          mkdir -p ${lib.escapeShellArg npmGlobal}/bin
-          mkdir -p ${lib.escapeShellArg npmGlobal}/lib/node_modules
-        '';
       }
     )
     (
