@@ -203,6 +203,12 @@ Notes:
 - Avoid `sudo launchctl setenv` for proxy setup; SIP can block it.
 - Restart the terminal, log out/in, or reboot if shell integration, fonts, or macOS defaults do not appear immediately.
 
+## CI & binary cache
+
+GitHub Actions (`.github/workflows/ci.yml`) formats, checks, evaluates, and (on `flake.lock` changes) fully builds every NixOS host. The full build pulls in custom packages like `codex` (a large Rust workspace from `llm-agents.nix`) that are **not** on `cache.nixos.org`. To avoid rebuilding them from source on every run, the `nix-installer-action` is configured with numtide's public binary cache (`https://cache.numtide.com`), which `llm-agents.nix` declares in its own `nixConfig`. No account or secret is required.
+
+For local builds, `cache.numtide.com` is also configured in the system nix settings (`modules/system/common/nix.nix` and `modules/system/darwin/common/nix.nix`), so `nixos-rebuild` / `darwin-rebuild` pull prebuilt `codex` automatically after the next switch.
+
 ## Acknowledgements
 - [ryan4yin/nix-config](https://github.com/ryan4yin/nix-config): many configurations were adapted from here.
 - [niksingh710/ndots](https://github.com/niksingh710/ndots): the flake layout inspired how this repo is organized.
