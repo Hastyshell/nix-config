@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -10,6 +11,7 @@ in
   programs.vscode = {
     enable = true;
     package = if pkgs.stdenv.isLinux then pkgs.vscode.fhs else pkgs.vscode;
+    mutableExtensionsDir = true;
 
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
@@ -21,7 +23,6 @@ in
         ms-vscode-remote.remote-ssh
         ms-vscode-remote.remote-containers
         ms-azuretools.vscode-docker
-        catppuccin.catppuccin-vsc
         rust-lang.rust-analyzer
         vscodevim.vim
         eamodio.gitlens
@@ -50,13 +51,21 @@ in
         "debug.console.fontFamily" = lib.mkForce monoFont;
         "scm.inputFontFamily" = lib.mkForce monoFont;
         "terminal.integrated.fontFamily" = lib.mkForce monoFont;
-        "workbench.colorTheme" = lib.mkForce "Catppuccin Mocha";
+        "workbench.colorTheme" = lib.mkForce "Dark 2026";
         "vim.handleKeys" = {
           "<C-p>" = false;
         };
       };
     };
   };
+
+  # Install missing Marketplace extensions; VS Code manages subsequent updates.
+  home.activation.installVscodeMarketplaceExtensions = lib.hm.dag.entryAfter [ "onFilesChange" ] ''
+    run ${lib.getExe config.programs.vscode.package} \
+      --install-extension openai.chatgpt \
+      --install-extension openai.codex-audio \
+      --install-extension vsls-contrib.codetour
+  '';
 
   home.packages = with pkgs; [
     rustfmt
