@@ -1,8 +1,8 @@
 { self, ... }:
 {
   hostname = "hasty-worker";
-  username = "tangsiyang";
-  fullName = "Siyang Tang";
+  username = "hastyshell";
+  fullName = "Hastyshell";
   email = "tangsiyang@xiaohongshu.com";
 
   modules = [
