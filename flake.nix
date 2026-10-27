@@ -58,8 +58,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    mac-app-util.url = "github:hraban/mac-app-util";
-
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     homebrew-core = {

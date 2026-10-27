@@ -36,7 +36,6 @@ let
             }
           )
 
-          inputs.mac-app-util.darwinModules.default
           inputs.home-manager.darwinModules.home-manager
 
           {
@@ -59,12 +58,11 @@ let
               useGlobalPkgs = true;
               useUserPackages = true;
               backupFileExtension = "bak";
-              sharedModules = [
-                inputs.mac-app-util.homeManagerModules.default
-              ];
               extraSpecialArgs = { inherit inputs; };
               users.${username} = {
                 imports = homeModules ++ [ globalOptions ];
+
+                targets.darwin.copyApps.enable = true;
 
                 home = {
                   inherit username;
