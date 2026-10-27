@@ -6,7 +6,7 @@
 let
   username = config.system.primaryUser;
   commonCasks = [
-    "codex-app"
+    "chatgpt"
   ];
 in
 {
@@ -18,7 +18,7 @@ in
     enable = true;
     taps = builtins.attrNames config.nix-homebrew.taps;
     onActivation = {
-      cleanup = "none";
+      cleanup = "uninstall";
       autoUpdate = false;
       upgrade = false;
     };

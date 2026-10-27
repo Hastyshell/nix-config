@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   nixpkgs.hostPlatform = "aarch64-darwin";
 
@@ -14,6 +14,10 @@
 
   homebrew.casks = [
     "tencent-meeting"
-    "wechatwork"
+    "wechat"
+  ];
+
+  system.defaults.dock.persistent-apps = lib.mkAfter [
+    { app = "/Applications/WeChat.app"; }
   ];
 }
