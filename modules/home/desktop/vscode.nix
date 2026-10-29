@@ -29,7 +29,7 @@ in
       ];
 
       userSettings = {
-        "window.zoomLevel" = 0.75;
+        "window.zoomLevel" = 0;
         "editor.fontFamily" = lib.mkForce monoFont;
         "editor.fontSize" = lib.mkForce 14;
         "editor.bracketPairColorization.enabled" = true;
