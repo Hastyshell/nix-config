@@ -8,6 +8,8 @@
   xdg.configFile."nvim".source = inputs.nvim-config.outPath;
   programs.neovim = {
     enable = true;
+    # Keep init.lua from nvim-config and load Home Manager's setup through the wrapper.
+    sideloadInitLua = true;
     withPython3 = true;
     withRuby = true;
 
