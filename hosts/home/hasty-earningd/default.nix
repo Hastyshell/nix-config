@@ -2,76 +2,34 @@
 {
   hostname = "hasty-earningd";
   username = "hastyshell";
-  homeDirectory = "/data/hastyshell";
+  homeDirectory = "/home/hastyshell";
   fullName = "Siyang Tang";
   email = "tangsiyang@xiaohongshu.com";
-  system = "x86_64-linux";
+  system = "aarch64-linux";
   homeModules = [
     self.homeModules.default
     (
-      { pkgs, ... }:
+      { lib, ... }:
       {
-        custom.home.codex.proxy.enable = true;
-
-        home.sessionVariables = {
-          PATH = "$HOME/.nix-profile/bin:$PATH";
-          GIT_SSH_COMMAND = "ssh -F none";
-          JAVA_8_HOME = "${pkgs.jdk8}";
-          JAVA_17_HOME = "${pkgs.jdk17}/lib/openjdk";
-          JAVA_HOME = "${pkgs.jdk17}/lib/openjdk";
+        targets.genericLinux = {
+          enable = true;
+          gpu.enable = false;
         };
-        home.sessionPath = [
-          "${pkgs.jdk17}/lib/openjdk/bin"
-        ];
-      }
-    )
-    (
-      { pkgs, ... }:
-      {
-        home.packages = with pkgs; [
-          maven
-        ];
-      }
-    )
-    (
-      { lib, ... }:
-      {
-        programs.zsh.initContent = lib.mkBefore ''
-          ZSH_DISABLE_COMPFIX="true"
-        '';
-      }
-    )
-    (
-      { lib, ... }:
-      {
-        programs.zsh.initContent = lib.mkAfter ''
-          export CLASHCTL_HOME=/data/hastyshell/clashctl
-          . $CLASHCTL_HOME/scripts/cmd/clashctl.sh
-        '';
-      }
-    )
-    (
-      { lib, ... }:
-      {
-        programs.zsh.initContent = lib.mkAfter ''
-          _use-java() {
-            local java_home="$1"
-            local clean_path
+        programs = {
+          home-manager.enable = true;
+          direnv.stdlib = builtins.readFile ./build-cache.sh;
+          zsh = {
+            envExtra = ''
+              if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+                . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+              fi
+            '';
 
-            clean_path=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vE '/openjdk-(8|17)' | paste -sd ':' -)
-            export JAVA_HOME="$java_home"
-            export PATH="$JAVA_HOME/bin:''${clean_path}"
-            java -version
-          }
-
-          use-java8() {
-            _use-java "$JAVA_8_HOME"
-          }
-
-          use-java17() {
-            _use-java "$JAVA_17_HOME"
-          }
-        '';
+            initContent = lib.mkBefore ''
+              ZSH_DISABLE_COMPFIX="true"
+            '';
+          };
+        };
       }
     )
   ];
