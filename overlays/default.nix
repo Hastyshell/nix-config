@@ -25,6 +25,7 @@ let
     llm-agents = final: _prev: {
       inherit (inputs.llm-agents.packages.${final.stdenv.hostPlatform.system})
         codex
+        claude-code
         ;
     };
 

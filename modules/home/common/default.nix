@@ -10,6 +10,7 @@
     ./git.nix
     ./direnv.nix
     ./codex.nix
+    ./claude.nix
     ./node.nix
   ];
 
