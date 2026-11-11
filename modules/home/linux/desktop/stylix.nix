@@ -1,5 +1,6 @@
 {
   stylix.targets.neovim.enable = false;
+  stylix.targets.zed.enable = false;
   stylix.targets.alacritty.enable = false;
   stylix.targets.gnome.enable = false;
   stylix.targets.swaylock.enable = false;

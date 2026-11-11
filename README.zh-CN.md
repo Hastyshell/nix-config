@@ -82,6 +82,61 @@
 
 Neovim 由 Home Manager 启用，并直接引用外部配置 `inputs.nvim-config`，仓库为 [Hastyshell/diy.nvim](https://github.com/Hastyshell/diy.nvim)，同步到 `~/.config/nvim`。额外的构建和运行时依赖已经预先包装好，包括 nixd、lua-language-server、stylua、nixfmt、statix、deadnix、rg、fzf、shellcheck/shfmt，以及 SQL/TOML/YAML/Markdown/GitHub Actions 相关工具，让 LSP、formatter 和 Telescope 开箱可用。
 
+## Zed
+
+桌面主机通过 `modules/home/desktop/zed.nix` 安装 Zed，与 VS Code 并存。
+使用 VS Code 键位、Vim 模式和 Ctrl-P 文件搜索，编辑器与终端均为
+JetBrainsMono Nerd Font 14 号，主题为 `VS Code Dark 2026`。
+
+| VS Code 配置 / 插件 | Zed 对应能力 |
+| --- | --- |
+| Nix IDE、direnv | Nix 扩展、nixd、nixfmt、内置 direnv 集成 |
+| rust-analyzer、clangd | 内置语言支持，使用 PATH 中的 Nix 工具；Rust/C/C++ 保存时格式化 |
+| CodeLLDB | 内置调试器；项目启动参数仍需配置 |
+| Remote SSH、Dev Containers | 内置远程开发；连接及容器运行时按项目配置 |
+| Docker | Dockerfile 扩展；不包含 VS Code Docker 插件的全部管理界面 |
+| GitLens | 内置 Git、行内 blame；不是完整 GitLens 替代 |
+| OpenAI ChatGPT / Codex | 预配置 Codex ACP，在 Agent 面板选择 Codex，按提示登录 |
+| Codex Audio、CodeTour | 尚未配置等价替代 |
+
+扩展在首次启动时联网安装。设置和键位保持可编辑；下次 Home Manager
+激活会重新覆盖本模块声明的字段，保留其他自定义字段。Linux 使用 FHS
+包装包，以支持扩展下载的工具；Linux 的 Stylix Zed target 已关闭以保留上述外观。
+Codex 接入方式见 [Zed External Agents 文档](https://zed.dev/docs/ai/external-agents)。
+
+文件树固定在左侧，Agent 对话面板和会话侧栏放在右侧。`ui_font_size = 18` 放大界面文字和图标，代码与终端字体仍为 14。
+键位参考当前 `diy.nvim` 配置，以下 Leader 均为空格，仅在普通模式生效
+（代码操作和格式化也支持可视模式）：
+
+| 按键 | Zed 操作 |
+| --- | --- |
+| `\` | 在普通模式或空白编辑区打开/聚焦文件树；在文件树中再次按下收起 |
+| `<leader>sf` / `<leader>sg` | 文件搜索 / 项目全文搜索 |
+| `<leader><leader>` / `<leader>/` | 已打开标签列表 / 当前文件搜索 |
+| `<leader>sk` / `<leader>ss` | 键位设置 / 命令面板 |
+| `<leader>sd` / `<leader>q` / `<leader>xx` | 项目诊断 |
+| `<leader>ds` / `<leader>ws` | 当前文件符号 / 工作区符号 |
+| `<leader>cs` / `<leader>to` | 大纲侧栏 |
+| `<leader>cr` / `<leader>ca` / `<leader>cf` | 重命名 / 代码操作 / 格式化 |
+| `gd` / `gD` / `gI` / `gy` / `gr` | 定义 / 声明 / 实现 / 类型定义 / 引用 |
+| `H` / `L` | 上一个 / 下一个标签 |
+| `<leader>bp` / `<leader>bP` | 固定标签 / 关闭未固定标签 |
+| `<leader>bl` / `<leader>br` / `<leader>bd` | 关闭左侧 / 右侧 / 当前标签；保留未保存提示 |
+| `Ctrl` + 方向键 | 调整分屏大小 |
+| `[h` / `]h` / `<leader>gp` | 上一个 / 下一个 Git 修改块 / 展开修改块 |
+| `<leader>gb` / `<leader>gB` / `<leader>tb` | 行 blame / 文件 blame / 切换行内 blame |
+| `<leader>th` | 切换 inlay hints |
+| `sa` / `sd` / `sr` | 添加 / 删除 / 替换包围符，使用 Zed 的 surround 实现 |
+| `Ctrl-\` | 切换终端面板 |
+
+多个定义或引用改用弹窗选择器展示，不再使用 multibuffer 长列表。单个定义仍直接跳转，
+Vim 普通模式下可用 `Ctrl-W d` 在分屏中打开；这不等同于 VS Code 的内嵌 Peek Definition 预览窗口。
+
+这些是 Zed 原生操作的映射，不加载 Neovim Lua 插件。当前文件搜索不是 Telescope
+模糊行搜索，终端不是 ToggleTerm 浮窗，文件树不模拟 Neo-tree 打开文件后自动关闭。
+Treewalker 的 `Ctrl-h/j/k/l`、UndoTree、OpenCode、会话恢复、Telescope 特有筛选和
+Git 暂存/回退操作暂未迁移；mini.ai/surround 的高级语义也不保证完全一致。
+
 ## 自定义选项
 
 查看 `options/default.nix` 获取功能开关，例如 `custom.linux.desktop.wm.niri.enable`、`custom.linux.desktop.bar.waybar.enable`、`custom.nixos.graphics.nvidia.enable`、`custom.nixos.secureBoot.lanzaboote.enable`、`custom.nixos.desktop.remoteDesktop.sunshine.enable` 等。各主机通过组合这些开关来启用或关闭功能。

@@ -8,7 +8,7 @@ let
     "${homeDirectory}/Applications/Home Manager Apps/iTerm2.app"
     "/Applications/ChatGPT.app"
     "/Applications/Clash Verge.app"
-    "${homeDirectory}/Applications/Home Manager Apps/Visual Studio Code.app"
+    "${homeDirectory}/Applications/Home Manager Apps/Zed.app"
     "${homeDirectory}/Applications/Home Manager Apps/Obsidian.app"
     "/System/Applications/Messages.app"
     "/System/Applications/Mail.app"

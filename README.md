@@ -75,6 +75,58 @@ Personal Nix flake for my Linux desktops, standalone Home Manager hosts, and mac
 ## Neovim
 Neovim is enabled via Home Manager and sources my external config (`inputs.nvim-config`, repo: [Hastyshell/diy.nvim](https://github.com/Hastyshell/diy.nvim)) directly into `~/.config/nvim`. Extra build/runtime deps are pre-wrapped (nixd, lua-language-server, stylua, nixfmt, statix, deadnix, rg, fzf, shellcheck/shfmt, sql/toml/yaml/markdown/Actions tooling) so LSPs, formatters, and Telescope work out of the box.
 
+## Zed
+
+Desktop hosts install Zed alongside VS Code through `modules/home/desktop/zed.nix`.
+It uses the VS Code keymap, Vim mode, Ctrl-P file search, JetBrainsMono Nerd Font
+at size 14 in the editor and terminal, and the `VS Code Dark 2026` theme.
+
+| VS Code configuration / extension | Zed equivalent |
+| --- | --- |
+| Nix IDE, direnv | Nix extension, nixd, nixfmt, built-in direnv integration |
+| rust-analyzer, clangd | Built-in language support using Nix tools on PATH; format Rust/C/C++ on save |
+| CodeLLDB | Built-in debugger; launch arguments remain project-specific |
+| Remote SSH, Dev Containers | Built-in remote development; configure connections and container runtimes per project |
+| Docker | Dockerfile extension; not the full VS Code Docker management UI |
+| GitLens | Built-in Git and inline blame; not all GitLens features |
+| OpenAI ChatGPT / Codex | Preconfigured Codex ACP; select Codex in the Agent panel and sign in when prompted |
+| Codex Audio, CodeTour | No equivalent configured |
+
+Extensions download on first launch. Settings and keybindings remain editable;
+Home Manager reapplies declared fields on activation while retaining other custom
+fields. Linux uses the FHS package to support extension-downloaded tools, with
+the Stylix Zed target disabled to preserve this appearance.
+See [Zed External Agents](https://zed.dev/docs/ai/external-agents) for Codex integration.
+
+The file tree is docked on the left; the Agent panel and thread sidebar are on the right.
+UI text and icons use `ui_font_size = 18`,
+while editor and terminal text stay at 14. Space-leader mappings follow `diy.nvim`:
+`sf`/`sg` search files/project text, Space lists tabs, `/` searches the current file,
+`sk`/`ss` open keybindings/the command palette, `sd`/`q`/`xx` show diagnostics,
+`ds`/`ws` find document/workspace symbols, `cs`/`to` focus the outline,
+`cr`/`ca`/`cf` rename/show code actions/format, and `th` toggles inlay hints.
+Leader mappings apply in normal mode; `ca` and `cf` also work in visual mode.
+
+`H`/`L` switch tabs; Space `bp`/`bP` pin a tab/close unpinned tabs;
+Space `bl`/`br`/`bd` close tabs to the left/right/the current tab, retaining save prompts.
+`gr` finds references, alongside native `gd`/`gD`/`gI`/`gy` navigation.
+Backslash opens/focuses the file tree from normal mode or an empty pane; pressing it
+again in the tree closes it.
+Ctrl-arrow keys resize panes; Ctrl-backslash toggles the terminal panel.
+`[h`/`]h` navigate Git hunks; Space `gp` toggles hunk previews,
+`gb`/`gB` show line/file blame, and `tb` toggles inline blame.
+`sa`/`sd`/`sr` use Zed's add/delete/change-surround operations.
+
+Multiple definitions or references open in a picker instead of a multibuffer.
+A single definition still opens directly; Vim `Ctrl-W d` opens it in a split.
+This does not provide VS Code's inline Peek Definition window.
+
+These bindings call native Zed actions, not Neovim Lua plugins. Buffer search is
+literal/regex rather than Telescope fuzzy-line search. The terminal is a panel,
+and the file tree does not auto-close on opening a file. Treewalker, UndoTree,
+OpenCode, session restoration, Telescope-specific filters, and Git stage/reset
+bindings are not migrated; advanced mini.ai/surround semantics can differ.
+
 ## Custom options
 See `options/default.nix` for feature switches like `custom.linux.desktop.wm.niri.enable`, `custom.linux.desktop.bar.waybar.enable`, `custom.nixos.graphics.nvidia.enable`, `custom.nixos.secureBoot.lanzaboote.enable`, `custom.nixos.desktop.remoteDesktop.sunshine.enable`, etc. Hosts compose these to turn features on/off per machine.
 
