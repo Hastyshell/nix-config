@@ -26,6 +26,8 @@ let
       inherit (inputs.llm-agents.packages.${final.stdenv.hostPlatform.system})
         codex
         claude-code
+        t3code
+        t3code-desktop
         ;
     };
 

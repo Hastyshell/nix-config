@@ -11,6 +11,7 @@
     ./direnv.nix
     ./codex.nix
     ./claude.nix
+    ./t3code.nix
     ./node.nix
   ];
 
