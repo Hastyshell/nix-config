@@ -106,6 +106,8 @@ in
         # Match diy.nvim's Space leader without intercepting typing or menus.
         context = "Editor && mode == full && vim_mode == normal && !menu";
         bindings = {
+          # Unbind Vim's single-Space motion so the leader menu can wait for input.
+          space = null;
           "\\" = "project_panel::Toggle";
           escape = [
             "action::Sequence"
