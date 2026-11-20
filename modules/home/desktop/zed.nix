@@ -48,9 +48,20 @@ in
           ]
         else
           [ "Source Han Sans SC" ];
-      # Icons scale with the UI font size, independently of the editor text.
-      ui_font_size = 18;
+      # Zed has no density setting: labels, icons and bar heights all scale with this value
+      # (labels render at 14px * size / 16). 15 gives ~13px labels like VS Code's workbench,
+      # keeping the UI text slightly smaller than the 14px editor text.
+      ui_font_size = 15;
+      # Panel inputs default to 12px, which looks undersized next to the editor.
+      agent_buffer_font_size = 14;
+      git_commit_buffer_font_size = 14;
+      tabs = {
+        file_icons = true;
+        git_status = true;
+      };
       project_panel.dock = "left";
+      # Rows already use the roomiest `comfortable` spacing, so extra whitespace comes from width.
+      project_panel.default_width = 300;
       agent = {
         dock = "right";
         threads_sidebar.position = "right";
@@ -119,6 +130,7 @@ in
             ]
           ];
           "space s f" = "file_finder::Toggle";
+          # Project search multibuffer that stays open, for stepping through matches one by one.
           "space s g" = "pane::DeploySearch";
           "space s w" = [
             "pane::DeploySearch"
@@ -126,6 +138,14 @@ in
               whole_word = true;
               regex = false;
             }
+          ];
+          # Text finder picker with a preview pane. Enter or a double click opens the match and
+          # closes the picker; the picker's "Open as Tab" (Alt-Cmd-F) keeps the results instead.
+          "space s shift-g" = "text_finder::Toggle";
+          # The picker only seeds from a selection, so select the word under the cursor first.
+          "space s shift-w" = [
+            "workspace::SendKeystrokes"
+            "v i w space s shift-w"
           ];
           # The file finder lists recent files before a query is entered.
           "space s ." = "file_finder::Toggle";
@@ -253,6 +273,11 @@ in
       {
         context = "Editor && mode == full && vim_mode == visual && !menu";
         bindings = {
+          # Same as normal mode: let the leader menu wait for input instead of moving right.
+          space = null;
+          "space s g" = "pane::DeploySearch";
+          "space s shift-g" = "text_finder::Toggle";
+          "space s shift-w" = "text_finder::Toggle";
           "g o" = "agent::AddSelectionToThread";
           "s a" = [
             "vim::PushAddSurrounds"
