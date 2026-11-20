@@ -24,7 +24,8 @@ in
     extensions = [
       "nix"
       "dockerfile"
-      "vscode-2026-theme"
+      "catppuccin"
+      "catppuccin-icons"
     ];
 
     # https://zed.dev/docs/reference/all-settings
@@ -59,7 +60,8 @@ in
       lsp_results_location = "picker";
       terminal.font_family = monoFont;
       terminal.font_size = 14;
-      theme = "VS Code Dark 2026";
+      theme = "Catppuccin Mocha";
+      icon_theme = "Catppuccin Mocha";
       colorize_brackets = true;
       indent_guides.coloring = "indent_aware";
       load_direnv = "direct";
