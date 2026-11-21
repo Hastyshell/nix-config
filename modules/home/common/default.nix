@@ -12,6 +12,7 @@
     ./codex.nix
     ./claude.nix
     ./t3code.nix
+    ./antigravity.nix
     ./node.nix
   ];
 
